@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guided Meditation - Manovriti AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#667eea;--secondary:#764ba2;--accent:#f093fb;--light:#f8f9fc;--dark:#2d3748;--border:#e2e8f0}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);min-height:100vh;padding:2rem;color:white}
+.page-nav{display:flex;justify-content:space-between;margin-bottom:1rem}
+.back-btn{background:rgba(255,255,255,.15);color:white;border:none;padding:.5rem 1.1rem;border-radius:25px;cursor:pointer;font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+.back-btn:hover{background:rgba(255,255,255,.25)}
+.container{max-width:1100px;margin:0 auto}
+header{text-align:center;padding:2rem 0;margin-bottom:2rem}
+header h1{font-size:2.2rem;margin-bottom:.5rem}
+header p{opacity:.8}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+
+/* Breathing circle */
+.breath-section{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:2rem;text-align:center;margin-bottom:1.5rem}
+.breath-section h2{margin-bottom:1.5rem;font-size:1.3rem}
+.breath-controls{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.ex-btn{padding:.6rem 1.2rem;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:white;border-radius:25px;cursor:pointer;font-size:.88rem;font-weight:600;transition:.2s;font-family:inherit}
+.ex-btn:hover,.ex-btn.active{background:linear-gradient(135deg,var(--primary),var(--secondary));border-color:var(--primary)}
+.circle-wrap{display:flex;justify-content:center;margin:1.5rem 0}
+.breath-circle{width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(102,126,234,.4),rgba(118,75,162,.2));border:3px solid rgba(102,126,234,.6);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 4s ease;position:relative}
+.breath-circle.inhale{transform:scale(1.4)}
+.breath-circle.hold{transform:scale(1.4)}
+.breath-circle.exhale{transform:scale(1)}
+.breath-phase{font-size:1.2rem;font-weight:700}
+.breath-count{font-size:2.5rem;font-weight:800;margin-top:.3rem}
+.breath-timer{font-size:.85rem;opacity:.7;margin-top:.3rem}
+.breath-start-btn{padding:.9rem 2.5rem;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border:none;border-radius:50px;font-weight:700;font-size:1rem;cursor:pointer;transition:.2s;margin-top:.5rem;font-family:inherit}
+.breath-start-btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(102,126,234,.5)}
+
+/* Meditation sessions */
+.sessions-section{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:1.5rem;margin-bottom:1.5rem}
+.sessions-section h2{margin-bottom:1.2rem;font-size:1.3rem}
+.sessions-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem}
+.session-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:1.2rem;cursor:pointer;transition:.2s;text-align:center}
+.session-card:hover{background:rgba(255,255,255,.15);transform:translateY(-4px)}
+.session-card.playing{background:linear-gradient(135deg,rgba(102,126,234,.3),rgba(118,75,162,.3));border-color:var(--primary)}
+.session-icon{font-size:2.5rem;margin-bottom:.6rem}
+.session-title{font-weight:700;font-size:.95rem;margin-bottom:.3rem}
+.session-dur{font-size:.8rem;opacity:.7}
+.session-desc{font-size:.82rem;opacity:.8;margin-top:.4rem;line-height:1.4}
+
+/* Music player -->
+.music-bar{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:1.2rem;display:flex;align-items:center;gap:1rem}
+.music-info{flex:1}
+.music-title{font-weight:700;font-size:.95rem}
+.music-sub{font-size:.8rem;opacity:.7;margin-top:.2rem}
+.music-controls{display:flex;gap:.6rem;align-items:center}
+.mc-btn{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:.2s}
+.mc-btn.play-btn{background:linear-gradient(135deg,var(--primary),var(--secondary));width:50px;height:50px;font-size:1.3rem}
+.mc-btn:hover{transform:scale(1.1)}
+.progress-bar{width:100%;height:4px;background:rgba(255,255,255,.2);border-radius:2px;margin-top:.6rem;cursor:pointer;position:relative;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:2px;transition:width .3s;width:0%}
+
+/* chatbot */
+.chat-panel{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;display:flex;flex-direction:column;height:600px;overflow:hidden;position:sticky;top:24px}
+.chat-header{background:linear-gradient(135deg,rgba(102,126,234,.6),rgba(118,75,162,.6));padding:1rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-shrink:0;border-radius:24px 24px 0 0}
+.chat-avatar{width:38px;height:38px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.chat-header h4{margin:0;font-size:1rem}
+.chat-header p{margin:0;font-size:.78rem;opacity:.85}
+.chat-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.7rem;scroll-behavior:smooth}
+.msg{max-width:86%;padding:.7rem 1rem;border-radius:15px;font-size:.88rem;line-height:1.5;word-wrap:break-word}
+.msg.bot{background:rgba(255,255,255,.12);color:white;align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;align-self:flex-end;border-bottom-right-radius:4px}
+.msg.typing{display:flex;gap:4px;align-items:center;padding:.75rem 1rem}
+.dot{width:7px;height:7px;background:rgba(255,255,255,.5);border-radius:50%;animation:bounce2 1.4s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce2{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.qr-row{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 .8rem .6rem}
+.qr{background:none;border:1.5px solid rgba(255,255,255,.4);color:white;border-radius:20px;padding:.28rem .7rem;font-size:.78rem;cursor:pointer;transition:.2s;font-family:inherit}
+.qr:hover{background:rgba(255,255,255,.2)}
+.chat-input-row{display:flex;align-items:center;gap:.5rem;padding:.7rem .8rem;border-top:1px solid rgba(255,255,255,.15);flex-shrink:0}
+.chat-input-row input{flex:1;border:2px solid rgba(255,255,255,.2);border-radius:25px;padding:.55rem 1rem;font-size:.88rem;font-family:inherit;outline:none;background:rgba(255,255,255,.1);color:white}
+.chat-input-row input::placeholder{color:rgba(255,255,255,.5)}
+.chat-input-row input:focus{border-color:var(--primary);background:rgba(255,255,255,.15)}
+.send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-nav">
+    <a class="back-btn" href="index.html">← Back to Home</a>
+    <a class="back-btn" href="mood-tracker.html">📊 Mood Tracker</a>
+  </div>
+
+  <header>
+    <h1>🧘 Guided Meditation & Breathing</h1>
+    <p>Find your calm. Breathe. Heal.</p>
+  </header>
+
+  <div class="grid">
+    <div>
+      <!-- Breathing Exercise -->
+      <div class="breath-section">
+        <h2>🌬️ Breathing Exercise</h2>
+        <div class="breath-controls">
+          <button class="ex-btn active" data-pattern="4-4-4-4" onclick="selectPattern(this,'Box Breathing','4-4-4-4')">Box Breathing</button>
+          <button class="ex-btn" data-pattern="4-7-8" onclick="selectPattern(this,'4-7-8 Relaxing','4-7-8')">4-7-8 Relax</button>
+          <button class="ex-btn" data-pattern="2-1-4-1" onclick="selectPattern(this,'Deep Calm','2-1-4-1')">Deep Calm</button>
+          <button class="ex-btn" data-pattern="1-1-1-1" onclick="selectPattern(this,'Quick Reset','1-1-1-1')">Quick Reset</button>
+        </div>
+        <div class="circle-wrap">
+          <div class="breath-circle" id="breathCircle">
+            <div class="breath-phase" id="breathPhase">Ready</div>
+            <div class="breath-count" id="breathCount">—</div>
+            <div class="breath-timer" id="breathTimer">Press Start</div>
+          </div>
+        </div>
+        <div id="cycleCount" style="opacity:.7;font-size:.9rem;margin-bottom:1rem">Cycles completed: <strong>0</strong></div>
+        <button class="breath-start-btn" id="breathStartBtn" onclick="toggleBreathing()">▶ Start Exercise</button>
+      </div>
+
+      <!-- Meditation sessions -->
+      <div class="sessions-section">
+        <h2>🎯 Guided Sessions</h2>
+        <div class="sessions-grid">
+          <div class="session-card" onclick="startSession(this,'Morning Clarity','☀️','5 min','Start your day with intention and clarity. Focus on gratitude and positive energy.')">
+            <div class="session-icon">☀️</div>
+            <div class="session-title">Morning Clarity</div>
+            <div class="session-dur">5 minutes</div>
+            <div class="session-desc">Start your day with gratitude and positive intention</div>
+          </div>
+          <div class="session-card" onclick="startSession(this,'Anxiety Relief','😌','7 min','Gently release anxiety and tension from your body and mind step by step.')">
+            <div class="session-icon">😌</div>
+            <div class="session-title">Anxiety Relief</div>
+            <div class="session-dur">7 minutes</div>
+            <div class="session-desc">Gentle release of anxiety and mental tension</div>
+          </div>
+          <div class="session-card" onclick="startSession(this,'Sleep Prep','🌙','10 min','Slow down your mind and body. Drift into peaceful, restorative sleep.')">
+            <div class="session-icon">🌙</div>
+            <div class="session-title">Sleep Prep</div>
+            <div class="session-dur">10 minutes</div>
+            <div class="session-desc">Wind down for peaceful, restorative sleep</div>
+          </div>
+          <div class="session-card" onclick="startSession(this,'Body Scan','🧘','8 min','A full body awareness practice to release tension held in each muscle group.')">
+            <div class="session-icon">🧘</div>
+            <div class="session-title">Body Scan</div>
+            <div class="session-dur">8 minutes</div>
+            <div class="session-desc">Release tension stored in your body</div>
+          </div>
+          <div class="session-card" onclick="startSession(this,'Self-Compassion','💜','6 min','Practice loving-kindness toward yourself and others. Build inner warmth.')">
+            <div class="session-icon">💜</div>
+            <div class="session-title">Self-Compassion</div>
+            <div class="session-dur">6 minutes</div>
+            <div class="session-desc">Build inner warmth and loving-kindness</div>
+          </div>
+          <div class="session-card" onclick="startSession(this,'Focus & Flow','🎯','5 min','Sharpen your attention and enter a productive, calm flow state.')">
+            <div class="session-icon">🎯</div>
+            <div class="session-title">Focus & Flow</div>
+            <div class="session-dur">5 minutes</div>
+            <div class="session-desc">Sharpen focus and enter a calm flow state</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session player -->
+      <div class="music-bar" id="sessionPlayer" style="display:none">
+        <div style="font-size:2rem" id="playerIcon">🧘</div>
+        <div class="music-info">
+          <div class="music-title" id="playerTitle">Session Name</div>
+          <div class="music-sub" id="playerSub">Starting...</div>
+          <div class="progress-bar" onclick="seekProgress(event)"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="music-controls">
+          <button class="mc-btn play-btn" id="playBtn" onclick="togglePlay()">⏸</button>
+          <button class="mc-btn" onclick="stopSession()">⏹</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-avatar">🧘</div>
+        <div><h4>Manovriti AI</h4><p>🟢 Meditation guide</p></div>
+      </div>
+      <div class="chat-msgs" id="chatMessages">
+        <div class="msg bot">Namaste! 🙏 I'm here to guide you through meditation and breathing. Try a breathing exercise above, or ask me to guide you through a personalized session. What do you need right now?</div>
+      </div>
+      <div class="qr-row" id="chatQR">
+        <button class="qr" onclick="sq('Guide me through a 5 minute meditation for anxiety')">Anxiety meditation</button>
+        <button class="qr" onclick="sq('Teach me the 4-7-8 breathing technique step by step')">4-7-8 breathing</button>
+        <button class="qr" onclick="sq('I can\'t sleep, help me relax')">Can\'t sleep</button>
+        <button class="qr" onclick="sq('What is mindfulness? How do I start?')">What is mindfulness?</button>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" placeholder="Ask for meditation guidance..." />
+        <button class="send-btn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000/api';
+let sid = localStorage.getItem('manovriti_session') || null;
+
+// ─── Breathing ───────────────────────────────────────────────────────────────
+let breathActive = false;
+let breathTimer = null;
+let currentPattern = [4, 4, 4, 4];
+let patternName = 'Box Breathing';
+let cycles = 0;
+const phases = ['Inhale', 'Hold', 'Exhale', 'Hold'];
+const phaseColors = ['#667eea','#f59e0b','#10b981','#f093fb'];
+
+function selectPattern(el, name, pat) {
+  document.querySelectorAll('.ex-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  patternName = name;
+  const parts = pat.split('-').map(Number);
+  if (parts.length === 3) currentPattern = [parts[0], parts[1], parts[2], 0];
+  else currentPattern = parts;
+  if (breathActive) { stopBreathing(); }
+  document.getElementById('breathPhase').textContent = name;
+  document.getElementById('breathCount').textContent = '—';
+  document.getElementById('breathTimer').textContent = 'Press Start';
+  cycles = 0; updateCycles();
+}
+
+function toggleBreathing() {
+  breathActive ? stopBreathing() : startBreathing();
+}
+
+function stopBreathing() {
+  breathActive = false; clearTimeout(breathTimer);
+  document.getElementById('breathStartBtn').textContent = '▶ Start Exercise';
+  document.getElementById('breathPhase').textContent = 'Paused';
+  document.getElementById('breathCount').textContent = '—';
+  const c = document.getElementById('breathCircle');
+  c.className = 'breath-circle'; c.style.borderColor = '';
+}
+
+let phaseIndex = 0; let countdown = 0;
+
+function startBreathing() {
+  breathActive = true; phaseIndex = 0;
+  document.getElementById('breathStartBtn').textContent = '⏸ Pause';
+  runPhase();
+}
+
+function runPhase() {
+  if (!breathActive) return;
+  const dur = currentPattern[phaseIndex];
+  if (!dur || dur === 0) { phaseIndex = (phaseIndex + 1) % 4; if (phaseIndex === 0) { cycles++; updateCycles(); } runPhase(); return; }
+  const phaseName = phases[phaseIndex];
+  const circle = document.getElementById('breathCircle');
+  document.getElementById('breathPhase').textContent = phaseName;
+  document.getElementById('breathTimer').textContent = patternName;
+  circle.style.borderColor = phaseColors[phaseIndex];
+  if (phaseName === 'Inhale') circle.className = 'breath-circle inhale';
+  else if (phaseName === 'Exhale') circle.className = 'breath-circle exhale';
+  else circle.className = 'breath-circle hold';
+  countdown = dur;
+  countDown();
+}
+
+function countDown() {
+  if (!breathActive) return;
+  document.getElementById('breathCount').textContent = countdown;
+  if (countdown <= 0) {
+    phaseIndex = (phaseIndex + 1) % 4;
+    if (phaseIndex === 0) { cycles++; updateCycles(); }
+    runPhase();
+  } else { countdown--; breathTimer = setTimeout(countDown, 1000); }
+}
+
+function updateCycles() {
+  document.getElementById('cycleCount').innerHTML = `Cycles completed: <strong>${cycles}</strong>`;
+}
+
+// ─── Session player ──────────────────────────────────────────────────────────
+let sessionPlaying = false; let sessionInterval = null; let sessionProgress = 0; let sessionDuration = 300;
+
+function startSession(el, title, icon, dur, desc) {
+  document.querySelectorAll('.session-card').forEach(c => c.classList.remove('playing'));
+  el.classList.add('playing');
+  const mins = parseInt(dur); sessionDuration = mins * 60;
+  document.getElementById('playerTitle').textContent = title;
+  document.getElementById('playerIcon').textContent = icon;
+  document.getElementById('sessionPlayer').style.display = 'flex';
+  sessionProgress = 0; sessionPlaying = true;
+  document.getElementById('playBtn').textContent = '⏸';
+  startSessionTimer();
+  sq(`Guide me through the "${title}" meditation. ${desc}`);
+}
+
+function startSessionTimer() {
+  clearInterval(sessionInterval);
+  sessionInterval = setInterval(() => {
+    if (!sessionPlaying) return;
+    sessionProgress++; const pct = (sessionProgress / sessionDuration) * 100;
+    document.getElementById('progressFill').style.width = pct + '%';
+    const rem = sessionDuration - sessionProgress;
+    const m = Math.floor(rem/60); const s = rem % 60;
+    document.getElementById('playerSub').textContent = `${m}:${s.toString().padStart(2,'0')} remaining`;
+    if (sessionProgress >= sessionDuration) { clearInterval(sessionInterval); document.getElementById('playerSub').textContent = 'Session complete! 🎉'; document.getElementById('playBtn').textContent = '▶'; sessionPlaying = false; }
+  }, 1000);
+}
+
+function togglePlay() {
+  sessionPlaying = !sessionPlaying;
+  document.getElementById('playBtn').textContent = sessionPlaying ? '⏸' : '▶';
+}
+function stopSession() {
+  clearInterval(sessionInterval); sessionPlaying = false;
+  document.querySelectorAll('.session-card').forEach(c => c.classList.remove('playing'));
+  document.getElementById('sessionPlayer').style.display = 'none';
+}
+function seekProgress(e) {
+  const bar = e.currentTarget; const rect = bar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  sessionProgress = Math.floor(pct * sessionDuration);
+}
+
+// ─── Chatbot ─────────────────────────────────────────────────────────────────
+function addMsg(text, role) {
+  const msgs = document.getElementById('chatMessages');
+  const d = document.createElement('div'); d.className = `msg ${role}`; d.textContent = text;
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const d = document.createElement('div'); d.className = 'msg bot typing'; d.id = 'typing';
+  d.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+  msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
+}
+function hideTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
+async function sendMsg() {
+  const inp = document.getElementById('chatInput'); const msg = inp.value.trim(); if (!msg) return;
+  inp.value = ''; addMsg(msg, 'user'); document.getElementById('chatQR').style.display = 'none'; showTyping();
+  try {
+    const r = await fetch(`${API}/chatbot`, { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg, sessionId: sid, context: 'meditation' }) });
+    const d = await r.json(); hideTyping();
+    if (d.reply) { if(d.sessionId&&!sid){sid=d.sessionId;localStorage.setItem('manovriti_session',sid);} addMsg(d.reply,'bot'); }
+    else addMsg(d.error||'Try again 💜','bot');
+  } catch { hideTyping(); addMsg('⚠️ Run: node server.js', 'bot'); }
+}
+function sq(t) { document.getElementById('chatInput').value = t; sendMsg(); }
+document.getElementById('chatInput').addEventListener('keydown', e => { if(e.key==='Enter') sendMsg(); });
+</script>
+</body>
+</html>

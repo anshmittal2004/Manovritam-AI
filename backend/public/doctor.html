@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Connectivity - Manovriti AI</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#667eea;--secondary:#764ba2;--accent:#f093fb;--light:#f8f9fc;--dark:#2d3748;--border:#e2e8f0;--success:#10b981;--warn:#f59e0b}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,var(--primary),var(--secondary));min-height:100vh;padding:2rem}
+.page-nav{display:flex;justify-content:space-between;margin-bottom:1rem}
+.back-btn{background:rgba(255,255,255,.2);color:white;border:none;padding:.5rem 1.1rem;border-radius:25px;cursor:pointer;font-size:.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem}
+.back-btn:hover{background:rgba(255,255,255,.35)}
+.container{max-width:1200px;margin:0 auto}
+header{background:white;padding:2rem;border-radius:20px;margin-bottom:2rem;box-shadow:0 10px 30px rgba(0,0,0,.1);text-align:center}
+header h1{color:var(--dark);font-size:2.2rem;margin-bottom:.5rem}
+header p{color:#666}
+.grid{display:grid;grid-template-columns:1fr 340px;gap:1.5rem}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:white;border-radius:20px;padding:1.8rem;box-shadow:0 10px 30px rgba(0,0,0,.1);margin-bottom:1.5rem}
+.card h2{color:var(--dark);margin-bottom:1.2rem;font-size:1.3rem;display:flex;align-items:center;gap:.5rem}
+/* search/filter */
+.filter-row{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.filter-btn{padding:.45rem 1rem;border:2px solid var(--border);background:white;color:var(--dark);border-radius:25px;cursor:pointer;font-size:.85rem;font-weight:600;transition:.2s;font-family:inherit}
+.filter-btn:hover,.filter-btn.active{background:var(--primary);color:white;border-color:var(--primary)}
+.search-box{flex:1;min-width:200px;padding:.6rem 1rem;border:2px solid var(--border);border-radius:25px;font-size:.9rem;font-family:inherit;outline:none}
+.search-box:focus{border-color:var(--primary)}
+/* doctor cards */
+.doctors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem}
+.doc-card{background:var(--light);border-radius:16px;padding:1.3rem;border:2px solid var(--border);transition:.2s}
+.doc-card:hover{border-color:var(--primary);transform:translateY(-3px);box-shadow:0 8px 20px rgba(102,126,234,.15)}
+.doc-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.8rem}
+.doc-avatar{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:linear-gradient(135deg,rgba(102,126,234,.15),rgba(118,75,162,.15));flex-shrink:0}
+.doc-info .doc-name{font-weight:700;color:var(--dark);font-size:1rem}
+.doc-info .doc-spec{color:var(--primary);font-size:.85rem;font-weight:600;margin-top:.1rem}
+.doc-info .doc-exp{color:#666;font-size:.8rem}
+.doc-rating{display:flex;align-items:center;gap:.3rem;margin:.4rem 0}
+.stars{color:#f59e0b;font-size:.9rem}
+.rating-num{color:#666;font-size:.82rem}
+.doc-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.tag{padding:.2rem .6rem;background:rgba(102,126,234,.1);color:var(--primary);border-radius:10px;font-size:.75rem;font-weight:600}
+.doc-fee{font-weight:700;color:var(--success);margin:.4rem 0;font-size:.9rem}
+.doc-actions{display:flex;gap:.5rem;margin-top:.8rem}
+.btn-book{flex:1;padding:.6rem;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s;font-family:inherit}
+.btn-book:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(102,126,234,.4)}
+.btn-chat-doc{padding:.6rem .9rem;background:white;border:2px solid var(--primary);color:var(--primary);border-radius:10px;cursor:pointer;font-weight:600;font-size:.85rem;transition:.2s;font-family:inherit}
+.btn-chat-doc:hover{background:var(--primary);color:white}
+/* appointments */
+.appt-list{display:flex;flex-direction:column;gap:.8rem}
+.appt-card{background:var(--light);border-radius:12px;padding:1rem 1.2rem;border-left:4px solid var(--primary);display:flex;align-items:center;gap:1rem}
+.appt-icon{font-size:1.6rem}
+.appt-info{flex:1}
+.appt-title{font-weight:700;color:var(--dark);font-size:.95rem}
+.appt-meta{color:#666;font-size:.82rem;margin-top:.2rem}
+.appt-badge{padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:700}
+.appt-badge.upcoming{background:#dbeafe;color:#1d4ed8}
+.appt-badge.completed{background:#dcfce7;color:var(--success)}
+.btn-cancel{background:#fee2e2;color:#dc2626;border:none;padding:.35rem .7rem;border-radius:8px;cursor:pointer;font-size:.78rem;font-weight:600}
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;backdrop-filter:blur(5px);justify-content:center;align-items:center;padding:1rem}
+.modal.open{display:flex}
+.modal-box{background:white;border-radius:20px;padding:2rem;max-width:480px;width:100%;max-height:90vh;overflow-y:auto;animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.modal-box h3{color:var(--dark);margin-bottom:1.2rem;font-size:1.3rem}
+.form-group{margin-bottom:1rem}
+.form-group label{display:block;margin-bottom:.4rem;color:var(--dark);font-weight:600;font-size:.9rem}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:.75rem;border:2px solid var(--border);border-radius:10px;font-size:.9rem;font-family:inherit;outline:none;transition:.2s}
+.form-group input:focus,.form-group select:focus{border-color:var(--primary)}
+.modal-actions{display:flex;gap:.8rem;margin-top:1.2rem}
+.btn-confirm{flex:1;padding:.9rem;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit}
+.btn-cancel-modal{padding:.9rem 1.5rem;background:var(--light);border:2px solid var(--border);border-radius:10px;cursor:pointer;font-weight:600;font-family:inherit;color:var(--dark)}
+/* chatbot */
+.chat-panel{background:white;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.1);display:flex;flex-direction:column;height:600px;overflow:hidden;position:sticky;top:24px}
+.chat-header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:1rem 1.2rem;display:flex;align-items:center;gap:.8rem;flex-shrink:0}
+.chat-avatar{width:38px;height:38px;background:rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.chat-header h4{margin:0;font-size:1rem}
+.chat-header p{margin:0;font-size:.78rem;opacity:.85}
+.chat-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.7rem;scroll-behavior:smooth}
+.msg{max-width:86%;padding:.7rem 1rem;border-radius:15px;font-size:.88rem;line-height:1.5;word-wrap:break-word}
+.msg.bot{background:var(--light);color:var(--dark);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;align-self:flex-end;border-bottom-right-radius:4px}
+.msg.typing{display:flex;gap:4px;align-items:center;padding:.75rem 1rem}
+.dot{width:7px;height:7px;background:#9ca3af;border-radius:50%;animation:b2 1.4s infinite ease-in-out}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes b2{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.qr-row{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 .8rem .6rem}
+.qr{background:none;border:1.5px solid var(--primary);color:var(--primary);border-radius:20px;padding:.28rem .7rem;font-size:.78rem;cursor:pointer;transition:.2s;font-family:inherit}
+.qr:hover{background:var(--primary);color:white}
+.chat-input-row{display:flex;align-items:center;gap:.5rem;padding:.7rem .8rem;border-top:1px solid var(--border);flex-shrink:0}
+.chat-input-row input{flex:1;border:2px solid var(--border);border-radius:25px;padding:.55rem 1rem;font-size:.88rem;font-family:inherit;outline:none}
+.chat-input-row input:focus{border-color:var(--primary)}
+.send-btn{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-nav">
+    <a class="back-btn" href="index.html">← Back to Home</a>
+    <a class="back-btn" href="medication-manager.html">💊 Medications</a>
+  </div>
+
+  <header>
+    <h1>👨‍⚕️ Doctor Connectivity</h1>
+    <p>Find verified mental health professionals and book consultations</p>
+  </header>
+
+  <div class="grid">
+    <div>
+      <!-- Search & filter -->
+      <div class="card">
+        <h2>🔍 Find a Doctor</h2>
+        <div class="filter-row">
+          <input class="search-box" id="searchBox" placeholder="Search by name or specialty..." oninput="filterDoctors()">
+          <button class="filter-btn active" data-spec="all" onclick="filterBySpec(this)">All</button>
+          <button class="filter-btn" data-spec="Psychiatrist" onclick="filterBySpec(this)">Psychiatrists</button>
+          <button class="filter-btn" data-spec="Psychologist" onclick="filterBySpec(this)">Psychologists</button>
+          <button class="filter-btn" data-spec="Therapist" onclick="filterBySpec(this)">Therapists</button>
+        </div>
+        <div class="doctors-grid" id="doctorsGrid"></div>
+      </div>
+
+      <!-- My appointments -->
+      <div class="card">
+        <h2>📅 My Appointments</h2>
+        <div class="appt-list" id="apptList">
+          <p style="color:#999;text-align:center;padding:1.5rem">No appointments booked yet.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-avatar">🧠</div>
+        <div><h4>Manovriti AI</h4><p>🟢 Doctor guidance</p></div>
+      </div>
+      <div class="chat-msgs" id="chatMessages">
+        <div class="msg bot">Hello! 👨‍⚕️ I can help you understand which type of mental health professional you need, what to expect in a session, and answer general mental health questions. How can I help?</div>
+      </div>
+      <div class="qr-row" id="chatQR">
+        <button class="qr" onclick="sq('What is the difference between a psychiatrist and a psychologist?')">Psychiatrist vs Psychologist</button>
+        <button class="qr" onclick="sq('What happens in a first therapy session?')">First session</button>
+        <button class="qr" onclick="sq('How do I know if I need professional help?')">Do I need help?</button>
+        <button class="qr" onclick="sq('I am nervous about seeing a therapist')">Nervous about therapy</button>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" placeholder="Ask about doctors or therapy..." />
+        <button class="send-btn" onclick="sendMsg()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Booking Modal -->
+<div class="modal" id="bookModal">
+  <div class="modal-box">
+    <h3>📅 Book Appointment</h3>
+    <p style="color:#666;margin-bottom:1.2rem;font-size:.9rem">with <strong id="bookDocName"></strong></p>
+    <div class="form-group">
+      <label>Appointment Type</label>
+      <select id="bookType">
+        <option value="Video Call">🎥 Video Call</option>
+        <option value="Phone Call">📞 Phone Call</option>
+        <option value="In-Person">🏥 In-Person</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" id="bookDate" />
+    </div>
+    <div class="form-group">
+      <label>Time</label>
+      <select id="bookTime">
+        <option>09:00 AM</option><option>10:00 AM</option><option>11:00 AM</option>
+        <option>12:00 PM</option><option>02:00 PM</option><option>03:00 PM</option>
+        <option>04:00 PM</option><option>05:00 PM</option><option>06:00 PM</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Reason / Notes</label>
+      <textarea id="bookNotes" rows="3" placeholder="Briefly describe your concern..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmBooking()">✅ Confirm Booking</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'http://localhost:5000/api';
+let sid = localStorage.getItem('manovriti_session') || null;
+let currentBookDoc = null;
+let appointments = JSON.parse(localStorage.getItem('manovriti_appointments') || '[]');
+
+const doctors = [
+  { id:1, name:'Dr. Priya Sharma', spec:'Psychiatrist', emoji:'👩‍⚕️', exp:'12 years', rating:4.9, reviews:234, fee:'₹800', tags:['Anxiety','Depression','Bipolar'], avail:'Mon-Fri' },
+  { id:2, name:'Dr. Rahul Mehta', spec:'Psychologist', emoji:'👨‍⚕️', exp:'8 years', rating:4.8, reviews:189, fee:'₹600', tags:['CBT','Stress','Relationships'], avail:'Mon-Sat' },
+  { id:3, name:'Dr. Anjali Singh', spec:'Therapist', emoji:'👩‍⚕️', exp:'10 years', rating:4.9, reviews:312, fee:'₹700', tags:['Trauma','PTSD','Grief'], avail:'Tue-Sun' },
+  { id:4, name:'Dr. Vikram Nair', spec:'Psychiatrist', emoji:'👨‍⚕️', exp:'15 years', rating:4.7, reviews:156, fee:'₹1000', tags:['OCD','Schizophrenia','Medication'], avail:'Mon-Fri' },
+  { id:5, name:'Dr. Sneha Patel', spec:'Psychologist', emoji:'👩‍⚕️', exp:'6 years', rating:4.8, reviews:98, fee:'₹500', tags:['Mindfulness','Kids','Family'], avail:'Mon-Sat' },
+  { id:6, name:'Dr. Arjun Kumar', spec:'Therapist', emoji:'👨‍⚕️', exp:'9 years', rating:4.6, reviews:143, fee:'₹650', tags:['LGBTQ+','Identity','Self-esteem'], avail:'Wed-Sun' },
+];
+
+let activeSpec = 'all';
+let searchQuery = '';
+
+function renderDoctors() {
+  const filtered = doctors.filter(d => {
+    const matchSpec = activeSpec === 'all' || d.spec === activeSpec;
+    const matchSearch = !searchQuery || d.name.toLowerCase().includes(searchQuery) || d.spec.toLowerCase().includes(searchQuery) || d.tags.some(t => t.toLowerCase().includes(searchQuery));
+    return matchSpec && matchSearch;
+  });
+  const grid = document.getElementById('doctorsGrid');
+  if (!filtered.length) { grid.innerHTML = '<p style="color:#999;padding:1.5rem;grid-column:1/-1;text-align:center">No doctors found. Try a different filter.</p>'; return; }
+  grid.innerHTML = filtered.map(d => `
+    <div class="doc-card">
+      <div class="doc-top">
+        <div class="doc-avatar">${d.emoji}</div>
+        <div class="doc-info">
+          <div class="doc-name">${d.name}</div>
+          <div class="doc-spec">${d.spec}</div>
+          <div class="doc-exp">${d.exp} experience</div>
+        </div>
+      </div>
+      <div class="doc-rating"><span class="stars">★★★★★</span><span class="rating-num">${d.rating} (${d.reviews} reviews)</span></div>
+      <div class="doc-tags">${d.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="doc-fee">Consultation: ${d.fee} · Available: ${d.avail}</div>
+      <div class="doc-actions">
+        <button class="btn-book" onclick="openBooking(${d.id})">📅 Book Appointment</button>
+        <button class="btn-chat-doc" onclick="sq('I want to consult about ${d.tags[0].toLowerCase()} with a ${d.spec.toLowerCase()}')">💬 Ask AI</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterBySpec(el) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  activeSpec = el.dataset.spec;
+  renderDoctors();
+}
+function filterDoctors() { searchQuery = document.getElementById('searchBox').value.trim().toLowerCase(); renderDoctors(); }
+
+function openBooking(docId) {
+  currentBookDoc = doctors.find(d => d.id === docId);
+  document.getElementById('bookDocName').textContent = currentBookDoc.name + ' (' + currentBookDoc.spec + ')';
+  const today = new Date(); today.setDate(today.getDate() + 1);
+  document.getElementById('bookDate').min = today.toISOString().split('T')[0];
+  document.getElementById('bookDate').value = today.toISOString().split('T')[0];
+  document.getElementById('bookModal').classList.add('open');
+}
+function closeModal() { document.getElementById('bookModal').classList.remove('open'); }
+
+function confirmBooking() {
+  const type = document.getElementById('bookType').value;
+  const date = document.getElementById('bookDate').value;
+  const time = document.getElementById('bookTime').value;
+  const notes = document.getElementById('bookNotes').value;
+  if (!date) return alert('Please select a date!');
+  const appt = { id: Date.now(), doctor: currentBookDoc.name, spec: currentBookDoc.spec, type, date, time, notes, status: 'upcoming' };
+  appointments.push(appt);
+  localStorage.setItem('manovriti_appointments', JSON.stringify(appointments));
+  closeModal();
+  renderAppointments();
+  sq(`I just booked a ${type} appointment with ${currentBookDoc.name} on ${date} at ${time}.`);
+  alert(`✅ Appointment confirmed!\n\n${currentBookDoc.name}\n${type} · ${date} · ${time}`);
+}
+
+function cancelAppt(id) {
+  if (!confirm('Cancel this appointment?')) return;
+  appointments = appointments.filter(a => a.id !== id);
+  localStorage.setItem('manovriti_appointments', JSON.stringify(appointments));
+  renderAppointments();
+}
+
+function renderAppointments() {
+  const list = document.getElementById('apptList');
+  if (!appointments.length) { list.innerHTML = '<p style="color:#999;text-align:center;padding:1.5rem">No appointments booked yet.</p>'; return; }
+  const sorted = [...appointments].sort((a,b) => new Date(b.date) - new Date(a.date));
+  list.innerHTML = sorted.map(a => {
+    const past = new Date(a.date) < new Date();
+    return `<div class="appt-card">
+      <div class="appt-icon">${a.type==='Video Call'?'🎥':a.type==='Phone Call'?'📞':'🏥'}</div>
+      <div class="appt-info">
+        <div class="appt-title">${a.doctor}</div>
+        <div class="appt-meta">${a.type} · ${a.date} · ${a.time}${a.notes ? ' · ' + a.notes.slice(0,40) : ''}</div>
+      </div>
+      <span class="appt-badge ${past?'completed':'upcoming'}">${past?'Completed':'Upcoming'}</span>
+      ${!past?`<button class="btn-cancel" onclick="cancelAppt(${a.id})">Cancel</button>`:''}
+    </div>`;
+  }).join('');
+}
+
+window.onclick = e => { if(e.target===document.getElementById('bookModal')) closeModal(); };
+// Set min date
+document.getElementById('bookDate').min = new Date(Date.now()+86400000).toISOString().split('T')[0];
+
+// Chatbot
+function addMsg(text,role){const msgs=document.getElementById('chatMessages');const d=document.createElement('div');d.className=`msg ${role}`;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function showTyping(){const msgs=document.getElementById('chatMessages');const d=document.createElement('div');d.className='msg bot typing';d.id='typing';d.innerHTML='<div class="dot"></div><div class="dot"></div><div class="dot"></div>';msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight}
+function hideTyping(){const t=document.getElementById('typing');if(t)t.remove()}
+async function sendMsg(){const inp=document.getElementById('chatInput');const msg=inp.value.trim();if(!msg)return;inp.value='';addMsg(msg,'user');document.getElementById('chatQR').style.display='none';showTyping();try{const r=await fetch(`${API}/chatbot`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg,sessionId:sid,context:'general'})});const d=await r.json();hideTyping();if(d.reply){if(d.sessionId&&!sid){sid=d.sessionId;localStorage.setItem('manovriti_session',sid);}addMsg(d.reply,'bot');}else addMsg(d.error||'Try again 💜','bot');}catch{hideTyping();addMsg('⚠️ Run: node server.js','bot');}}
+function sq(t){document.getElementById('chatInput').value=t;sendMsg();}
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter')sendMsg();});
+
+renderDoctors();
+renderAppointments();
+</script>
+</body>
+</html>

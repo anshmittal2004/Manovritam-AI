@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Manovriti — Digital Journal</title>
+<style>
+  :root{
+    --purple1:#6c57e0;--purple2:#8b5cf6;--bg:#f6f7fb;
+    --panel:#ffffff;--dot:#dcdfe3;--muted:#6b7280;
+    --primary:#667eea;--secondary:#764ba2;--border:#e2e8f0;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(180deg,#6c57e0 0%,#8b5cf6 80%);color:#1f2937;min-height:100vh}
+  .wrap{max-width:1200px;margin:0 auto;padding:24px}
+
+  /* page nav */
+  .page-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+  .back-btn{background:rgba(255,255,255,0.2);color:white;border:none;padding:0.5rem 1.1rem;border-radius:25px;cursor:pointer;font-size:0.88rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:0.4rem}
+  .back-btn:hover{background:rgba(255,255,255,0.35)}
+
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;color:white}
+  header h1{margin:0;font-size:1.4rem;display:flex;align-items:center;gap:10px}
+
+  .main-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;align-items:start}
+  @media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+  /* journal card */
+  .card{background:var(--panel);border-radius:18px;padding:18px;box-shadow:0 8px 30px rgba(16,24,40,0.15)}
+  .tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+  .btn{background:#fbfbff;border:1px solid rgba(16,24,40,0.06);padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:700;display:inline-flex;gap:8px;align-items:center;font-family:inherit}
+  .btn.primary{background:linear-gradient(90deg,var(--purple1),var(--purple2));color:white;border:none;box-shadow:0 8px 24px rgba(108,87,224,0.18)}
+  .canvas-wrap{margin-top:12px;background:white;padding:18px;border-radius:16px}
+  .paper{
+    position:relative;border-radius:12px;padding:18px;
+    background-color:#fffefc;
+    background-image:radial-gradient(circle,var(--dot) 1px,transparent 1px);
+    background-size:18px 18px;
+    border:1px solid rgba(0,0,0,0.04);min-height:480px;overflow:hidden
+  }
+  canvas#drawCanvas{display:block;border-radius:10px;background:transparent;width:100%;height:480px}
+  .layer{position:absolute;inset:18px;border-radius:10px;pointer-events:none}
+  .elem{position:absolute;pointer-events:auto;touch-action:none;user-select:none}
+  .sticker{width:64px;height:64px;display:inline-flex;align-items:center;justify-content:center;font-size:34px;border-radius:12px;background:transparent;cursor:grab}
+  .txtbox{min-width:120px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.9);border:1px dashed rgba(0,0,0,0.06);font-size:16px}
+  .controls-row{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .color-swatch{width:36px;height:36px;border-radius:999px;border:2px solid #fff;box-shadow:0 6px 18px rgba(16,24,40,0.06);cursor:pointer}
+  .color-swatch.selected{outline:4px solid rgba(0,0,0,0.08);transform:translateY(-3px)}
+  .label{font-weight:700;color:var(--muted);margin-right:6px}
+  .panel-right{margin-top:12px}
+  .stick-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:10px;background:linear-gradient(180deg,#fbfbff,#ffffff);border-radius:12px}
+  .stick-grid button{background:#fbfbff;border-radius:12px;padding:14px;border:1px solid rgba(16,24,40,0.06);cursor:pointer;font-size:20px}
+  .meta{display:flex;gap:12px;align-items:center}
+  .slider{width:180px}
+  .small{font-size:0.9rem;color:var(--muted)}
+
+  /* ─── CHATBOT PANEL ─── */
+  .chat-panel{background:white;border-radius:18px;box-shadow:0 8px 30px rgba(16,24,40,0.15);display:flex;flex-direction:column;height:560px;overflow:hidden;position:sticky;top:24px}
+  .chat-panel-header{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;padding:1rem 1.2rem;display:flex;align-items:center;gap:0.8rem;flex-shrink:0}
+  .chat-avatar{width:38px;height:38px;background:rgba(255,255,255,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+  .chat-panel-header h4{margin:0;font-size:1rem}
+  .chat-panel-header p{margin:0;font-size:0.78rem;opacity:0.85}
+  .chat-msgs{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.7rem;scroll-behavior:smooth}
+  .msg{max-width:86%;padding:0.7rem 1rem;border-radius:15px;font-size:0.88rem;line-height:1.5;word-wrap:break-word}
+  .msg.bot{background:#f3f4f6;color:#1f2937;align-self:flex-start;border-bottom-left-radius:4px}
+  .msg.user{background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;align-self:flex-end;border-bottom-right-radius:4px}
+  .msg.typing{display:flex;gap:4px;align-items:center;padding:0.75rem 1rem}
+  .typing-dot{width:7px;height:7px;background:#9ca3af;border-radius:50%;animation:bounce 1.4s infinite ease-in-out}
+  .typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}
+  @keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+  .chat-qr{display:flex;flex-wrap:wrap;gap:0.4rem;padding:0 0.8rem 0.6rem}
+  .qr-btn{background:none;border:1.5px solid var(--primary);color:var(--primary);border-radius:20px;padding:.28rem .75rem;font-size:.78rem;cursor:pointer;transition:all .2s;font-family:inherit}
+  .qr-btn:hover{background:var(--primary);color:white}
+  .chat-input-row{display:flex;align-items:center;gap:.5rem;padding:.7rem .8rem;border-top:1px solid var(--border);flex-shrink:0}
+  .chat-input-row input{flex:1;border:2px solid var(--border);border-radius:25px;padding:.55rem 1rem;font-size:.88rem;font-family:inherit;outline:none}
+  .chat-input-row input:focus{border-color:var(--primary)}
+  .chat-send-btn{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:white;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center}
+
+  @media(max-width:520px){.wrap{padding:12px}.stick-grid{grid-template-columns:repeat(4,1fr)}canvas#drawCanvas{height:380px}}
+  .hint{font-size:.9rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-nav">
+    <a class="back-btn" href="index.html">← Back to Home</a>
+    <a class="back-btn" href="mood-tracker.html">📊 Mood Tracker</a>
+  </div>
+
+  <header>
+    <h1>📓 Digital Journal</h1>
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="small" style="color:white;" id="userLabel">Guest</div>
+    </div>
+  </header>
+
+  <div class="main-grid">
+    <!-- LEFT: Canvas journal -->
+    <div class="card">
+      <div class="tools">
+        <button class="btn" id="clearBtn">🗑️ Clear All</button>
+        <button class="btn" id="undoBtn">↶ Undo</button>
+        <div style="flex:1"></div>
+        <div class="meta">
+          <div class="small">Brush</div>
+          <input id="brushRange" class="slider" type="range" min="1" max="24" value="3" />
+          <div class="small"><span id="brushValue">3</span>px</div>
+        </div>
+        <button class="btn primary" id="saveBtn">💾 Save Journal</button>
+      </div>
+
+      <div class="canvas-wrap">
+        <div class="paper" id="paper">
+          <canvas id="drawCanvas"></canvas>
+          <div class="layer" id="layer"></div>
+        </div>
+
+        <div style="display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;align-items:flex-start">
+          <div style="flex:1" class="card" id="leftPanel">
+            <div style="font-weight:800;margin-bottom:8px">🖊️ Tools</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+              <button class="btn" id="toolDraw">✏️ Draw</button>
+              <button class="btn" id="toolText">📝 Text</button>
+              <button class="btn" id="toolEraser">🧽 Eraser</button>
+            </div>
+            <div style="margin-top:8px">
+              <div style="font-weight:800;margin-bottom:8px">🎨 Colors</div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <div class="color-swatch" data-color="#0f172a" style="background:#0f172a"></div>
+                <div class="color-swatch" data-color="#f43f5e" style="background:#f43f5e"></div>
+                <div class="color-swatch" data-color="#10b981" style="background:#10b981"></div>
+                <div class="color-swatch" data-color="#f59e0b" style="background:#f59e0b"></div>
+                <div class="color-swatch" data-color="#7c3aed" style="background:#7c3aed"></div>
+                <div class="color-swatch" data-color="#fb7185" style="background:#fb7185"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1.2" class="card panel-right">
+            <div style="font-weight:800;margin-bottom:8px">✨ Stickers</div>
+            <div class="stick-grid" id="stickers">
+              <button data-sticker="⭐">⭐</button><button data-sticker="💖">💖</button>
+              <button data-sticker="🌈">🌈</button><button data-sticker="🌸">🌸</button>
+              <button data-sticker="☀️">☀️</button><button data-sticker="🦋">🦋</button>
+              <button data-sticker="🌙">🌙</button><button data-sticker="✨">✨</button>
+              <button data-sticker="🎨">🎨</button><button data-sticker="🎭">🎭</button>
+              <button data-sticker="🎈">🎈</button><button data-sticker="🌺">🌺</button>
+            </div>
+            <div class="hint" style="margin-top:10px">Click a sticker then click on the paper to place. Drag to move.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Chatbot panel -->
+    <div class="chat-panel">
+      <div class="chat-panel-header">
+        <div class="chat-avatar">🧠</div>
+        <div>
+          <h4>Manovriti AI</h4>
+          <p>🟢 Journal companion</p>
+        </div>
+      </div>
+      <div class="chat-msgs" id="chatMessages">
+        <div class="msg bot">Hi! 📓 I'm here to help you journal. Writing about your feelings can be really healing. What's on your mind today?</div>
+      </div>
+      <div class="chat-qr" id="chatQR">
+        <button class="qr-btn" onclick="sendQuick('I don\'t know what to write about')">What to write?</button>
+        <button class="qr-btn" onclick="sendQuick('Give me a journaling prompt')">Journaling prompt</button>
+        <button class="qr-btn" onclick="sendQuick('I want to process my emotions')">Process emotions</button>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Chat with Manovriti..." />
+        <button class="chat-send-btn" id="chatSend">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ──────── Config ──────── */
+const API_BASE = 'http://localhost:5000/api';
+let chatSessionId = localStorage.getItem('manovriti_session') || null;
+let currentUser = JSON.parse(localStorage.getItem('manovriti_user') || 'null');
+if (currentUser) document.getElementById('userLabel').textContent = currentUser.name;
+
+/* ──────── Canvas setup ──────── */
+const canvas = document.getElementById('drawCanvas');
+const layer = document.getElementById('layer');
+const paper = document.getElementById('paper');
+
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+  canvas.style.width = rect.width + 'px';
+  canvas.style.height = rect.height + 'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  redrawAll();
+}
+window.addEventListener('resize', resizeCanvas);
+canvas.style.width = '100%';
+canvas.style.height = '480px';
+
+const ctx = canvas.getContext('2d');
+ctx.lineCap = 'round';
+ctx.lineJoin = 'round';
+
+let drawing = false;
+let currentTool = 'draw';
+let color = '#0f172a';
+let brushSize = 3;
+let undoStack = [];
+let maxUndo = 20;
+let placingSticker = null;
+
+const clearBtn = document.getElementById('clearBtn');
+const undoBtn = document.getElementById('undoBtn');
+const saveBtn = document.getElementById('saveBtn');
+const brushRange = document.getElementById('brushRange');
+const brushValue = document.getElementById('brushValue');
+
+brushRange.addEventListener('input', ()=> { brushSize = parseInt(brushRange.value,10); brushValue.textContent = brushSize; });
+
+/* ─ Tool selection ─ */
+const toolDraw = document.getElementById('toolDraw');
+const toolText = document.getElementById('toolText');
+const toolEraser = document.getElementById('toolEraser');
+function setTool(t) {
+  currentTool = t;
+  [toolDraw, toolText, toolEraser].forEach(b => b.style.background = '#fbfbff');
+  const sel = t === 'draw' ? toolDraw : t === 'text' ? toolText : toolEraser;
+  sel.style.background = 'linear-gradient(90deg,#6c57e0,#8b5cf6)';
+  sel.style.color = 'white';
+  if (t !== 'draw' && t !== 'eraser') { [toolDraw,toolEraser].forEach(b => b.style.color = '#1f2937'); }
+}
+toolDraw.addEventListener('click', ()=> setTool('draw'));
+toolText.addEventListener('click', ()=> setTool('text'));
+toolEraser.addEventListener('click', ()=> setTool('eraser'));
+setTool('draw');
+
+/* ─ Color swatches ─ */
+document.querySelectorAll('.color-swatch').forEach(sw => {
+  sw.addEventListener('click', ()=> {
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('selected'));
+    sw.classList.add('selected');
+    color = sw.dataset.color;
+  });
+});
+
+/* ─ Stickers ─ */
+document.querySelectorAll('.stick-grid button').forEach(btn => {
+  btn.addEventListener('click', ()=> { placingSticker = btn.dataset.sticker; canvas.style.cursor = 'crosshair'; });
+});
+
+/* ─ Stroke storage for redo ─ */
+let strokes = [];
+let currentStroke = null;
+
+function pushUndo() {
+  const data = { img: canvas.toDataURL(), html: layer.innerHTML, strokes: JSON.parse(JSON.stringify(strokes)) };
+  if (undoStack.length >= maxUndo) undoStack.shift();
+  undoStack.push(data);
+}
+
+function redrawAll() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  strokes.forEach(s => drawStroke(s));
+}
+
+function drawStroke(s) {
+  if (s.tool === 'eraser') {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.strokeStyle = 'rgba(0,0,0,1)';
+    ctx.lineWidth = s.size;
+  } else {
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.strokeStyle = s.color;
+    ctx.lineWidth = s.size;
+  }
+  ctx.beginPath();
+  if (s.points.length === 1) {
+    ctx.arc(s.points[0].x, s.points[0].y, s.size/2, 0, Math.PI*2);
+    ctx.fill();
+  } else {
+    ctx.moveTo(s.points[0].x, s.points[0].y);
+    for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
+    ctx.stroke();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / (window.devicePixelRatio||1) / rect.width;
+  const scaleY = canvas.height / (window.devicePixelRatio||1) / rect.height;
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+}
+
+canvas.addEventListener('pointerdown', (e)=>{
+  if (placingSticker) {
+    const pos = getPos(e);
+    addStickerAt(pos.x, pos.y, placingSticker);
+    placingSticker = null;
+    canvas.style.cursor = 'default';
+    return;
+  }
+  if (currentTool === 'text') { const pos = getPos(e); addTextAt(pos.x, pos.y); return; }
+  if (currentTool === 'draw' || currentTool === 'eraser') {
+    pushUndo();
+    drawing = true;
+    const pos = getPos(e);
+    currentStroke = { tool: currentTool, color, size: brushSize, points: [pos] };
+    strokes.push(currentStroke);
+    canvas.setPointerCapture(e.pointerId);
+  }
+});
+
+canvas.addEventListener('pointermove', (e)=>{
+  if (!drawing || !currentStroke) return;
+  const pos = getPos(e);
+  currentStroke.points.push(pos);
+  redrawAll();
+});
+
+canvas.addEventListener('pointerup', ()=>{ drawing = false; currentStroke = null; pushCurrentSnapshotToStackTop(); });
+
+function addTextAt(x, y) {
+  pushUndo();
+  const txt = document.createElement('div');
+  txt.className = 'elem txtbox';
+  txt.contentEditable = true;
+  txt.style.left = Math.max(6,x) + 'px';
+  txt.style.top = Math.max(6,y) + 'px';
+  txt.style.pointerEvents = 'auto';
+  txt.style.cursor = 'text';
+  txt.innerText = 'Write...';
+  enableDrag(txt);
+  layer.appendChild(txt);
+  setTimeout(()=>{ txt.focus(); placeCaretAtEnd(txt); }, 40);
+}
+
+function addStickerAt(x, y, char) {
+  pushUndo();
+  const s = document.createElement('div');
+  s.className = 'elem sticker';
+  s.innerText = char;
+  s.style.left = Math.max(6, x - 32) + 'px';
+  s.style.top = Math.max(6, y - 32) + 'px';
+  s.style.pointerEvents = 'auto';
+  enableDrag(s);
+  layer.appendChild(s);
+}
+
+function enableDrag(el) {
+  el.style.touchAction = 'none';
+  let dragging = false, startX=0, startY=0, ox=0, oy=0;
+  el.addEventListener('pointerdown', (ev)=>{
+    ev.stopPropagation();
+    dragging = true; el.setPointerCapture(ev.pointerId);
+    startX = ev.clientX; startY = ev.clientY;
+    ox = parseFloat(el.style.left)||0; oy = parseFloat(el.style.top)||0;
+    el.style.cursor = 'grabbing';
+    if (!el.dataset.moved) { pushUndo(); el.dataset.moved = '1'; }
+  });
+  window.addEventListener('pointermove', (ev)=>{ if (!dragging) return; el.style.left = Math.max(0, ox + ev.clientX - startX) + 'px'; el.style.top = Math.max(0, oy + ev.clientY - startY) + 'px'; });
+  window.addEventListener('pointerup', (ev)=>{ if (dragging){ dragging=false; el.releasePointerCapture&&el.releasePointerCapture(ev.pointerId); el.style.cursor='grab'; delete el.dataset.moved; pushCurrentSnapshotToStackTop(); } });
+}
+
+function placeCaretAtEnd(el) {
+  const range = document.createRange();
+  range.selectNodeContents(el); range.collapse(false);
+  const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+}
+
+function pushCurrentSnapshotToStackTop() {
+  const data = { img: canvas.toDataURL(), html: layer.innerHTML, strokes: JSON.parse(JSON.stringify(strokes)) };
+  if (undoStack.length && undoStack[undoStack.length-1].img === data.img && undoStack[undoStack.length-1].html === data.html) return;
+  if (undoStack.length >= maxUndo) undoStack.shift();
+  undoStack.push(data);
+}
+
+undoBtn.addEventListener('click', ()=>{
+  if (undoStack.length <= 1) { ctx.clearRect(0,0,canvas.width,canvas.height); layer.innerHTML=''; undoStack=[]; strokes=[]; return; }
+  undoStack.pop();
+  const top = undoStack[undoStack.length-1];
+  if (top) {
+    strokes = top.strokes || [];
+    redrawAll();
+    layer.innerHTML = top.html || '';
+  }
+});
+
+clearBtn.addEventListener('click', ()=>{
+  if (!confirm('Clear everything?')) return;
+  pushUndo();
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  layer.innerHTML='';
+  strokes=[];
+  pushCurrentSnapshotToStackTop();
+});
+
+saveBtn.addEventListener('click', async ()=>{
+  const final = await renderFinalImage();
+  const key = 'manovriti_journal_images';
+  const old = JSON.parse(localStorage.getItem(key)||'[]');
+  old.unshift({ id: Date.now(), data: final, date: new Date().toISOString() });
+  localStorage.setItem(key, JSON.stringify(old.slice(0,20)));
+  const a = document.createElement('a'); a.href = final; a.download = `journal_${Date.now()}.png`; a.click();
+  // Save to server
+  try {
+    await fetch(`${API_BASE}/journal/save`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: currentUser ? currentUser.email : 'guest', data: final })
+    });
+  } catch(e){}
+  alert('✅ Journal saved & downloaded!');
+});
+
+async function renderFinalImage() {
+  const rect = canvas.getBoundingClientRect();
+  const out = document.createElement('canvas');
+  out.width = rect.width; out.height = rect.height;
+  const oc = out.getContext('2d');
+  oc.fillStyle = '#fffefc'; oc.fillRect(0,0,out.width,out.height);
+  const img = new Image();
+  img.src = canvas.toDataURL();
+  await new Promise(r => img.onload = r);
+  oc.drawImage(img, 0, 0, out.width, out.height);
+  Array.from(layer.children).forEach(ch => {
+    const left = parseFloat(ch.style.left||0);
+    const top = parseFloat(ch.style.top||0);
+    if (ch.classList.contains('sticker')) { oc.font='40px serif'; oc.fillStyle='black'; oc.fillText(ch.innerText, left+8, top+44); }
+    else if (ch.isContentEditable||ch.contentEditable==='true') {
+      oc.font='16px "Segoe UI"'; oc.fillStyle='#111827';
+      (ch.innerText||ch.textContent||'').split('\n').forEach((ln,i) => oc.fillText(ln, left+8, top+20+(i*20)));
+    }
+  });
+  return out.toDataURL('image/png');
+}
+
+setTimeout(()=>{ resizeCanvas(); pushCurrentSnapshotToStackTop(); }, 80);
+window.addEventListener('beforeunload', ()=> pushCurrentSnapshotToStackTop());
+window.addEventListener('keydown',(e)=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='z'){e.preventDefault();undoBtn.click();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();saveBtn.click();}
+});
+
+// Auto-save draft
+(function loadLast(){
+  const data = JSON.parse(localStorage.getItem('manovriti_journal_last')||'null');
+  if (!data) return;
+  const img = new Image();
+  img.onload = ()=>{ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.drawImage(img,0,0,canvas.width/(window.devicePixelRatio||1),canvas.height/(window.devicePixelRatio||1)); };
+  img.src = data.img;
+  layer.innerHTML = data.html||'';
+  if (data.strokes) strokes = data.strokes;
+  pushCurrentSnapshotToStackTop();
+})();
+
+setInterval(()=>{
+  try{ localStorage.setItem('manovriti_journal_last', JSON.stringify({ img:canvas.toDataURL(), html:layer.innerHTML, strokes, at:new Date().toISOString() })); }catch(e){}
+}, 8000);
+
+/* ──────── CHATBOT ──────── */
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+
+function addMsg(text, role) {
+  const div = document.createElement('div');
+  div.className = `msg ${role}`;
+  div.textContent = text;
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg bot typing'; div.id = 'typingIndicator';
+  div.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  chatMessages.appendChild(div);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTyping() { const t = document.getElementById('typingIndicator'); if(t) t.remove(); }
+
+async function sendMessage() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+  chatInput.value = '';
+  addMsg(msg, 'user');
+  document.getElementById('chatQR').style.display = 'none';
+  showTyping();
+  try {
+    const res = await fetch(`${API_BASE}/chatbot`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, sessionId: chatSessionId, context: 'journal' })
+    });
+    const data = await res.json();
+    hideTyping();
+    if (data.reply) {
+      if (data.sessionId && !chatSessionId) { chatSessionId = data.sessionId; localStorage.setItem('manovriti_session', chatSessionId); }
+      addMsg(data.reply, 'bot');
+    } else addMsg('Try again in a moment 💜', 'bot');
+  } catch(e) {
+    hideTyping();
+    addMsg('⚠️ Server not running. Start it with: node server.js', 'bot');
+  }
+}
+
+function sendQuick(text) { chatInput.value = text; sendMessage(); }
+
+document.getElementById('chatSend').addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') sendMessage(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+<title>Manovritam AI - Mental Health & Wellness Platform</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #667eea; --secondary: #764ba2; --accent: #f093fb;
+            --light-bg: #f8f9fc; --dark-text: #2d3748; --border-color: #e2e8f0;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: var(--dark-text); overflow-x: hidden; line-height: 1.6; }
+
+        /* NAV */
+        nav { background: rgba(255,255,255,0.97); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.08); position: fixed; width: 100%; top: 0; z-index: 1000; backdrop-filter: blur(15px); }
+        .logo { font-size: 1.6rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--dark-text); font-weight: 600; font-size: 0.95rem; position: relative; transition: color 0.3s; }
+        .nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary)); transition: width 0.3s; }
+        .nav-links a:hover::after { width: 100%; }
+        .magnetic-btn { position: relative; padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 50px; font-weight: 700; cursor: pointer; overflow: hidden; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 4px 15px rgba(102,126,234,0.4); font-size: 0.95rem; }
+        .magnetic-btn:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 8px 30px rgba(102,126,234,0.6); }
+
+        /* HERO */
+        .hero { margin-top: 70px; padding: 5rem 5%; text-align: center; color: white; min-height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .hero::before, .hero::after { content: ''; position: absolute; border-radius: 50%; background: rgba(255,255,255,0.08); animation: float 8s ease-in-out infinite; }
+        .hero::before { width: 400px; height: 400px; top: -100px; left: -50px; }
+        .hero::after { width: 300px; height: 300px; bottom: -50px; right: -50px; animation-delay: 2s; }
+        @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(40px) rotate(10deg)} }
+        .hero-content { position: relative; z-index: 10; max-width: 900px; animation: slideInDown 0.8s ease; }
+        @keyframes slideInDown { from{opacity:0;transform:translateY(-50px)} to{opacity:1;transform:translateY(0)} }
+        h1 { font-size: clamp(2rem,5vw,4rem); margin-bottom: 1.5rem; font-weight: 800; line-height: 1.2; }
+        .tagline { font-size: clamp(1rem,2.5vw,1.4rem); margin-bottom: 2.5rem; opacity: 0.95; font-weight: 300; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .cta-group { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+        .btn-primary { padding: 1rem 2.5rem; background: white; color: var(--primary); border: none; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
+        .btn-secondary { padding: 1rem 2.5rem; background: transparent; color: white; border: 2.5px solid white; border-radius: 50px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: all 0.3s; }
+        .btn-secondary:hover { background: white; color: var(--primary); }
+
+        /* STATS */
+        .stats { background: rgba(255,255,255,0.1); padding: 3rem 5%; color: white; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .stat-item h3 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .stat-item p { font-size: 0.95rem; opacity: 0.9; }
+
+        /* FEATURES */
+        .features { padding: 6rem 5%; background: white; }
+        .section-title { text-align: center; font-size: clamp(2rem,4vw,3rem); margin-bottom: 4rem; color: var(--dark-text); font-weight: 800; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 2rem; max-width: 1400px; margin: 0 auto; }
+        .feature-card { padding: 2.5rem; background: linear-gradient(135deg, var(--light-bg) 0%, #fff 100%); border-radius: 20px; transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1); border: 2px solid var(--border-color); position: relative; overflow: hidden; cursor: pointer; user-select: none; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(102,126,234,0.12), transparent); transition: left 0.5s; }
+        .feature-card:hover::before { left: 100%; }
+        .feature-card:hover { transform: translateY(-12px); box-shadow: 0 20px 60px rgba(102,126,234,0.22); border-color: var(--primary); }
+        .feature-card:active { transform: scale(0.97); }
+        .feature-card .icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+        .feature-card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--dark-text); font-weight: 700; }
+        .feature-card p { color: #666; line-height: 1.7; font-size: 0.93rem; }
+        .feature-badge { position: absolute; top: 14px; right: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+
+        /* ABOUT / PANORAMA */
+        .panorama-section { padding: 6rem 5%; background: linear-gradient(135deg, var(--light-bg) 0%, rgba(240,147,251,0.1) 100%); position: relative; overflow: hidden; }
+        .panorama-text { max-width: 900px; margin: 0 auto; text-align: center; position: relative; z-index: 10; }
+        .panorama-text h2 { font-size: clamp(1.8rem,3.5vw,2.8rem); margin-bottom: 1.5rem; color: var(--dark-text); font-weight: 800; }
+        .panorama-text p { font-size: 1.05rem; color: #666; line-height: 1.8; margin-bottom: 1.2rem; }
+
+        /* PRICING */
+        .pricing-section { padding: 6rem 5%; background: white; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px,1fr)); gap: 2.5rem; max-width: 1200px; margin: 3rem auto 0; }
+        .pricing-card { border-radius: 20px; padding: 2.5rem; border: 2px solid var(--border-color); transition: all 0.4s; }
+        .pricing-card.featured { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; transform: scale(1.05); box-shadow: 0 20px 50px rgba(102,126,234,0.3); }
+        .pricing-card:hover { transform: translateY(-10px); }
+        .pricing-card.featured:hover { transform: scale(1.08) translateY(-10px); }
+        .price { font-size: 2.5rem; font-weight: 800; margin: 1rem 0; }
+        .pricing-card ul { list-style: none; margin: 1.5rem 0; }
+        .pricing-card li { padding: 0.8rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .pricing-card.featured li { border-bottom-color: rgba(255,255,255,0.2); }
+
+        /* MODAL BASE */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); animation: fadeIn 0.3s; overflow-y: auto; }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+        .modal-content { background-color: white; margin: 5vh auto; padding: 3rem; border-radius: 25px; width: 95%; max-width: 500px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); animation: slideInUp 0.4s cubic-bezier(0.34,1.56,0.64,1); max-height: 90vh; overflow-y: auto; }
+        .modal-content.wide { max-width: 720px; }
+        @keyframes slideInUp { from{opacity:0;transform:translateY(60px)} to{opacity:1;transform:translateY(0)} }
+        .close { color: #999; float: right; font-size: 2rem; font-weight: bold; cursor: pointer; transition: color 0.3s; line-height: 1; }
+        .close:hover { color: var(--primary); }
+        .modal h2 { margin-bottom: 1.5rem; color: var(--dark-text); margin-top: 0; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--dark-text); font-weight: 600; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.9rem; border: 2px solid var(--border-color); border-radius: 10px; font-size: 0.95rem; font-family: inherit; transition: all 0.3s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .submit-btn { width: 100%; padding: 1.1rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s; margin-top: 1rem; }
+        .submit-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(102,126,234,0.4); }
+
+        /* FEATURE MODALS */
+        .feature-modal-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 2px solid var(--border-color); }
+        .feature-modal-icon { font-size: 2.8rem; }
+        .feature-modal-header h2 { margin: 0; font-size: 1.6rem; }
+        .feature-modal-header p { margin: 0.3rem 0 0; color: #666; font-size: 0.9rem; }
+
+        /* Medication Manager */
+        .med-list { list-style: none; margin: 1rem 0; }
+        .med-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--light-bg); border-radius: 12px; margin-bottom: 0.8rem; border: 1px solid var(--border-color); }
+        .med-item-left h4 { margin: 0; font-size: 0.95rem; }
+        .med-item-left p { margin: 0.2rem 0 0; font-size: 0.8rem; color: #888; }
+        .med-badge { background: linear-gradient(135deg, #10b981, #059669); color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+        .med-badge.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .add-med-btn { width: 100%; padding: 0.85rem; background: none; border: 2px dashed var(--primary); color: var(--primary); border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.9rem; margin-top: 0.5rem; transition: all 0.2s; font-family: inherit; }
+        .add-med-btn:hover { background: rgba(102,126,234,0.06); }
+
+        /* Doctor / Therapist */
+        .doctor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .doctor-card { padding: 1.2rem; border: 2px solid var(--border-color); border-radius: 14px; cursor: pointer; transition: all 0.3s; }
+        .doctor-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(102,126,234,0.15); }
+        .doctor-card h4 { margin: 0.5rem 0 0.2rem; font-size: 0.95rem; }
+        .doctor-card p { margin: 0; font-size: 0.8rem; color: #888; }
+        .doctor-card .stars { color: #f59e0b; font-size: 0.85rem; }
+        .doctor-avatar { font-size: 2.2rem; }
+        .book-btn { display: inline-block; margin-top: 0.7rem; padding: 0.4rem 1rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 20px; font-size: 0.78rem; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+        /* Early Detection */
+        .quiz-question { font-size: 1rem; font-weight: 600; color: var(--dark-text); margin-bottom: 1rem; }
+        .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1.5rem; }
+        .quiz-opt { padding: 0.75rem 1rem; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; font-size: 0.88rem; font-family: inherit; background: white; transition: all 0.2s; text-align: left; }
+        .quiz-opt:hover, .quiz-opt.selected { border-color: var(--primary); background: rgba(102,126,234,0.08); }
+        .quiz-progress { height: 6px; background: var(--border-color); border-radius: 10px; margin-bottom: 1.5rem; overflow: hidden; }
+        .quiz-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 10px; transition: width 0.4s; }
+        .result-box { padding: 1.5rem; border-radius: 16px; text-align: center; margin-top: 1rem; }
+        .result-box.low { background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(5,150,105,0.1)); border: 2px solid #10b981; }
+        .result-box.medium { background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(217,119,6,0.1)); border: 2px solid #f59e0b; }
+        .result-box.high { background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(220,38,38,0.1)); border: 2px solid #ef4444; }
+        .result-box h3 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+        .result-box p { font-size: 0.9rem; line-height: 1.6; }
+
+        /* Meditation */
+        .meditation-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .med-session { padding: 1.2rem; border-radius: 14px; cursor: pointer; transition: all 0.3s; border: 2px solid var(--border-color); position: relative; overflow: hidden; }
+        .med-session:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 8px 20px rgba(102,126,234,0.15); }
+        .med-session.active { border-color: var(--primary); background: rgba(102,126,234,0.06); }
+        .med-session-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .med-session h4 { margin: 0 0 0.3rem; font-size: 0.95rem; }
+        .med-session p { margin: 0; font-size: 0.78rem; color: #888; }
+        .med-session .dur { font-size: 0.75rem; font-weight: 700; color: var(--primary); margin-top: 0.4rem; }
+        .breathing-circle { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); margin: 1.5rem auto; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.95rem; animation: breathe 8s ease-in-out infinite; cursor: pointer; box-shadow: 0 0 0 0 rgba(102,126,234,0.4); }
+        @keyframes breathe { 0%,100%{transform:scale(1); box-shadow:0 0 0 0 rgba(102,126,234,0.4)} 45%{transform:scale(1.35); box-shadow:0 0 0 30px rgba(102,126,234,0)} 55%{transform:scale(1.35)} }
+        .breathe-label { text-align: center; font-size: 0.85rem; color: #888; }
+
+        /* Wellness Music */
+        .playlist-list { list-style: none; margin-top: 1rem; }
+        .playlist-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+        .playlist-item:hover, .playlist-item.playing { background: rgba(102,126,234,0.07); border-color: var(--primary); }
+        .playlist-thumb { font-size: 2rem; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; background: var(--light-bg); border-radius: 10px; }
+        .playlist-info { flex: 1; }
+        .playlist-info h4 { margin: 0 0 0.2rem; font-size: 0.95rem; }
+        .playlist-info p { margin: 0; font-size: 0.78rem; color: #888; }
+        .playlist-dur { font-size: 0.8rem; color: #aaa; }
+        .play-btn { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; color: white; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .now-playing { background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); border-radius: 14px; padding: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+        .eq-bars { display: flex; gap: 3px; align-items: flex-end; height: 24px; }
+        .eq-bar { width: 4px; background: var(--primary); border-radius: 2px; animation: eq 0.8s ease-in-out infinite alternate; }
+        .eq-bar:nth-child(2){animation-delay:.1s}.eq-bar:nth-child(3){animation-delay:.2s}.eq-bar:nth-child(4){animation-delay:.3s}
+        @keyframes eq { from{height:6px} to{height:22px} }
+
+        /* Health Dashboard */
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .dash-card { padding: 1.2rem; border-radius: 14px; background: var(--light-bg); border: 2px solid var(--border-color); }
+        .dash-card h4 { margin: 0 0 0.8rem; font-size: 0.88rem; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dash-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
+        .dash-sub { font-size: 0.8rem; color: #aaa; margin-top: 0.3rem; }
+        .dash-bar { height: 8px; background: #e5e7eb; border-radius: 10px; margin-top: 0.8rem; overflow: hidden; }
+        .dash-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--primary), var(--secondary)); }
+        .mini-chart { display: flex; align-items: flex-end; gap: 4px; height: 50px; margin-top: 0.8rem; }
+        .bar-col { flex: 1; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--primary), var(--secondary)); opacity: 0.7; transition: opacity 0.2s; }
+        .bar-col:hover { opacity: 1; }
+
+        /* Community */
+        .post-list { list-style: none; margin-top: 1rem; }
+        .post-item { padding: 1rem; border: 1px solid var(--border-color); border-radius: 14px; margin-bottom: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .post-item:hover { border-color: var(--primary); background: rgba(102,126,234,0.04); }
+        .post-header { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.6rem; }
+        .post-avatar { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.85rem; font-weight: 700; }
+        .post-meta h4 { margin: 0; font-size: 0.88rem; }
+        .post-meta p { margin: 0; font-size: 0.75rem; color: #aaa; }
+        .post-text { font-size: 0.88rem; color: #555; line-height: 1.6; }
+        .post-actions { display: flex; gap: 1rem; margin-top: 0.7rem; }
+        .post-act-btn { background: none; border: none; font-size: 0.8rem; color: #aaa; cursor: pointer; display: flex; align-items: center; gap: 0.3rem; font-family: inherit; padding: 0; transition: color 0.2s; }
+        .post-act-btn:hover { color: var(--primary); }
+        .community-input { display: flex; gap: 0.7rem; margin-top: 1rem; }
+        .community-input input { flex: 1; border: 2px solid var(--border-color); border-radius: 25px; padding: 0.6rem 1rem; font-size: 0.88rem; font-family: inherit; outline: none; }
+        .community-input input:focus { border-color: var(--primary); }
+        .community-input button { padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 25px; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 0.85rem; }
+
+        /* Crisis Support */
+        .crisis-numbers { list-style: none; margin-top: 1rem; }
+        .crisis-num { display: flex; align-items: center; gap: 1rem; padding: 1.2rem; border-radius: 14px; margin-bottom: 0.8rem; border: 2px solid var(--border-color); cursor: pointer; transition: all 0.3s; }
+        .crisis-num:hover { border-color: #ef4444; background: rgba(239,68,68,0.04); }
+        .crisis-num-icon { font-size: 2rem; width: 50px; text-align: center; }
+        .crisis-num-info h4 { margin: 0 0 0.2rem; font-size: 1rem; }
+        .crisis-num-info p { margin: 0; font-size: 0.82rem; color: #888; }
+        .crisis-num-num { margin-left: auto; font-size: 1.1rem; font-weight: 800; color: #ef4444; }
+        .sos-btn { width: 100%; padding: 1.2rem; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 14px; font-size: 1.2rem; font-weight: 800; cursor: pointer; transition: all 0.3s; margin-top: 1rem; font-family: inherit; letter-spacing: 0.5px; }
+        .sos-btn:hover { transform: scale(1.02); box-shadow: 0 8px 25px rgba(239,68,68,0.4); }
+        .crisis-tips { margin-top: 1.2rem; padding: 1rem; background: rgba(102,126,234,0.06); border-radius: 12px; }
+        .crisis-tips h4 { margin: 0 0 0.7rem; font-size: 0.9rem; color: var(--secondary); }
+        .crisis-tips ul { padding-left: 1.2rem; }
+        .crisis-tips li { font-size: 0.85rem; color: #555; line-height: 1.8; }
+
+        /* FOOTER */
+        footer { background: var(--dark-text); color: white; text-align: center; padding: 3rem 5%; border-top: 1px solid rgba(255,255,255,0.1); }
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* CHATBOT WIDGET - FULL SCREEN ADDED */
+        #chatWidget { position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: 'Segoe UI', sans-serif; }
+        #chatToggle { width: 62px; height: 62px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(102,126,234,0.55); font-size: 1.7rem; display: flex; align-items: center; justify-content: center; transition: transform 0.3s, box-shadow 0.3s; color: white; position: relative; }
+        #chatToggle:hover { transform: scale(1.1); box-shadow: 0 12px 32px rgba(102,126,234,0.7); }
+        #chatBadge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: #f43f5e; border-radius: 50%; border: 2px solid white; display: none; }
+        #chatWindow { display: none; position: absolute; bottom: 80px; right: 0; width: 440px; height: 640px; background: white; border-radius: 24px; box-shadow: 0 24px 70px rgba(0,0,0,0.22); flex-direction: column; overflow: hidden; animation: chatOpen 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+        #chatWindow.open { display: flex; }
+        
+        /* FULL SCREEN CHAT STYLES */
+        #chatWindow.fullscreen {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            max-width: none !important;
+            max-height: none !important;
+            border-radius: 0 !important;
+            z-index: 10000 !important;
+        }
+        
+        #chatWindow.fullscreen .chat-msgs {
+            height: calc(100vh - 140px) !important;
+        }
+        
+        #chatWindow.fullscreen .chat-input-row {
+            padding: 1rem !important;
+        }
+        
+        #chatWindow.fullscreen .qr-btn {
+            padding: 0.4rem 1rem !important;
+            font-size: 0.9rem !important;
+        }
+        
+        @keyframes chatOpen { from{opacity:0;transform:scale(0.8) translateY(20px)} to{opacity:1;transform:scale(1) translateY(0)} }
+        
+        /* Language bar inside chat */
+        .chat-lang-bar { background: rgba(255,255,255,0.15); padding: 0.4rem 1rem; display:flex; align-items:center; gap:0.6rem; flex-shrink:0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .chat-lang-bar span { font-size:0.75rem; color:rgba(255,255,255,0.85); font-weight:600; }
+        .clang-btn { padding:0.22rem 0.75rem; border:1.5px solid rgba(255,255,255,0.4); border-radius:20px; background:none; color:rgba(255,255,255,0.8); font-size:0.75rem; cursor:pointer; font-weight:700; transition:0.15s; font-family:inherit; }
+        .clang-btn.active { background:rgba(255,255,255,0.28); color:white; border-color:white; }
+        
+        /* Timestamp on messages */
+        .msg-time { font-size:0.65rem; opacity:0.5; margin-top:0.25rem; display:block; }
+        
+        /* Global lang toggle in nav */
+        .lang-toggle { display:flex; background:#f1f3f8; border-radius:25px; padding:3px; gap:2px; }
+        .lang-btn { padding:0.28rem 0.85rem; border:none; border-radius:20px; cursor:pointer; font-size:0.8rem; font-weight:700; background:none; color:#777; font-family:inherit; transition:0.2s; }
+        .lang-btn.active { background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; }
+        
+        /* User chip */
+        .user-chip { display:flex; align-items:center; gap:0.45rem; background:#f1f3f8; border-radius:25px; padding:0.28rem 0.9rem 0.28rem 0.28rem; font-size:0.85rem; font-weight:600; color:var(--dark-text); }
+        .user-chip img { width:26px; height:26px; border-radius:50%; object-fit:cover; }
+        .user-initials { width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); color:white; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:700; }
+        
+        /* Google Sign-in button */
+        .google-signin-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:0.75rem; padding:0.95rem 1.5rem; border:2px solid #e2e8f0; border-radius:12px; background:white; font-size:0.95rem; font-weight:600; cursor:pointer; transition:all 0.2s; margin-bottom:1rem; font-family:inherit; color:#2d3748; }
+        .google-signin-btn:hover { border-color:#4285f4; box-shadow:0 4px 15px rgba(66,133,244,0.2); transform:translateY(-1px); }
+        .google-signin-btn img { width:22px; height:22px; }
+        
+        .or-divider { display:flex; align-items:center; gap:0.8rem; margin:0.75rem 0 1.25rem; color:#aaa; font-size:0.85rem; }
+        .or-divider::before,.or-divider::after { content:''; flex:1; height:1px; background:#e2e8f0; }
+        
+        /* Tab switcher in auth modal */
+        .auth-tabs { display:flex; border-bottom:2px solid #e2e8f0; margin-bottom:1.5rem; }
+        .auth-tab { flex:1; padding:0.75rem; border:none; background:none; font-weight:700; font-size:0.95rem; cursor:pointer; color:#aaa; border-bottom:3px solid transparent; margin-bottom:-2px; transition:0.2s; font-family:inherit; }
+        .auth-tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+        
+        .chat-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 1rem 1.2rem; display: flex; align-items: center; gap: 0.8rem; }
+        .chat-header-avatar { width: 40px; height: 40px; background: rgba(255,255,255,0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+        .chat-header-info { flex: 1; }
+        .chat-header-info h4 { margin: 0; font-size: 1rem; font-weight: 700; }
+        .chat-header-info p { margin: 0; font-size: 0.78rem; opacity: 0.85; }
+        .chat-status { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; display: inline-block; margin-right: 4px; }
+        
+        #chatFullscreenBtn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0 4px; transition: transform 0.2s; }
+        #chatFullscreenBtn:hover { transform: scale(1.2); }
+        #chatClose { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; padding: 0; line-height: 1; }
+        
+        #chatMessages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; scroll-behavior: smooth; }
+        .msg { max-width: 82%; padding: 0.75rem 1rem; border-radius: 16px; font-size: 0.9rem; line-height: 1.5; word-wrap: break-word; }
+        .msg.bot { background: var(--light-bg); color: var(--dark-text); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg.user { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .msg.typing { display: flex; gap: 4px; align-items: center; padding: 0.75rem 1.2rem; }
+        .typing-dot { width: 7px; height: 7px; background: #9ca3af; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}
+        @keyframes bounce { 0%,80%,100%{transform:scale(0)} 40%{transform:scale(1)} }
+        
+        .quick-replies { display: flex; flex-wrap: wrap; gap: 0.5rem; padding: 0 1rem; }
+        .qr-btn { background: none; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 20px; padding: 0.3rem 0.85rem; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+        .qr-btn:hover { background: var(--primary); color: white; }
+        
+        .chat-input-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 1rem; border-top: 1px solid var(--border-color); }
+        #chatInput { flex: 1; border: 2px solid var(--border-color); border-radius: 25px; padding: 0.6rem 1rem; font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s; resize: none; max-height: 90px; }
+        #chatInput:focus { border-color: var(--primary); }
+        #chatSend { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; cursor: pointer; color: white; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: transform 0.2s; flex-shrink: 0; }
+        #chatSend:hover { transform: scale(1.1); }
+
+        @media(max-width:768px) { .features-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))} .stats{grid-template-columns:repeat(2,1fr);padding:2rem 4%} .doctor-grid,.meditation-grid,.dash-grid{grid-template-columns:1fr} .quiz-options{grid-template-columns:1fr} }
+        @media(max-width:480px) { #chatWindow{width:calc(100vw - 16px);right:-8px;bottom:70px;max-height:70vh} .pricing-grid{grid-template-columns:1fr} .pricing-card.featured{transform:scale(1)} }
+        
+        @media (max-width: 768px) {
+            #chatWindow.fullscreen .quick-replies {
+                flex-wrap: wrap;
+                gap: 0.3rem;
+            }
+            #chatWindow.fullscreen .qr-btn {
+                flex: 1 1 auto;
+                min-width: 120px;
+            }
+            #chatWindow.fullscreen .chat-input-row textarea {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="logo">🧠 Manovritam AI</div>
+    <ul class="nav-links">
+        <li><a href="#features" id="nav-features">Features</a></li>
+        <li><a href="#about" id="nav-about">About</a></li>
+        <li><a href="#pricing" id="nav-pricing">Pricing</a></li>
+        <li><a href="mood-tracker.html" id="nav-mood">Mood Tracker</a></li>
+        <li><a href="journal.html" id="nav-journal">Journal</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:0.75rem;flex-shrink:0">
+        <div class="lang-toggle">
+            <button class="lang-btn active" id="langEN" onclick="setLang('en')">EN</button>
+            <button class="lang-btn" id="langHI" onclick="setLang('hi')">हिं</button>
+        </div>
+        <div id="userChip" style="display:none"></div>
+        <button class="magnetic-btn" id="navAuthBtn" onclick="openSignUp()">Get Started Free</button>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Your AI-Powered Mental Wellness Companion</h1>
+        <p class="tagline">Advanced AI meets compassionate care. Track moods, journal thoughts, get 24/7 emotional support, and connect with certified therapists — all in one place.</p>
+        <div class="cta-group">
+            <button class="btn-primary" onclick="openSignUp()">Start Your Journey — Free</button>
+            <button class="btn-secondary" onclick="openChatWindow()">💬 Talk to Manovritam</button>
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+    <div class="stat-item fade-in"><h3>10K+</h3><p>Users Supported</p></div>
+    <div class="stat-item fade-in"><h3>98%</h3><p>Satisfaction Rate</p></div>
+    <div class="stat-item fade-in"><h3>24/7</h3><p>AI Support</p></div>
+    <div class="stat-item fade-in"><h3>50+</h3><p>Expert Doctors</p></div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section class="features" id="features">
+    <h2 class="section-title">Powerful Features for Complete Wellness</h2>
+    <div class="features-grid">
+
+        <!-- 1. Mood Tracker → page -->
+        <div class="feature-card fade-in" onclick="window.location.href='mood-tracker.html'">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">📊</span>
+            <h3>Mood Tracker</h3>
+            <p>Track daily emotions, view calendar patterns, log notes, and get AI-powered monthly insights into your mood trends.</p>
+        </div>
+
+        <!-- 2. Medication Manager → modal -->
+        <div class="feature-card fade-in" onclick="openModal('medModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">💊</span>
+            <h3>Medication Manager</h3>
+            <p>Track medications and prescriptions with reminders, dosage management, and side effect monitoring.</p>
+        </div>
+
+        <!-- 3. AI Chatbot → opens chat widget -->
+        <div class="feature-card fade-in" onclick="openChatWindow()">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">🤖</span>
+            <h3>AI Chatbot Support</h3>
+            <p>Get instant emotional support powered by AI — coping strategies, CBT techniques, breathing exercises, and personalized guidance 24/7.</p>
+        </div>
+
+        <!-- 4. Doctor Connectivity → modal -->
+        <div class="feature-card fade-in" onclick="openModal('doctorModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">👨‍⚕️</span>
+            <h3>Doctor Connectivity</h3>
+            <p>Book consultations with licensed psychiatrists, share your data, and receive expert medical guidance whenever you need it.</p>
+        </div>
+
+        <!-- 5. Therapist Network → modal -->
+        <div class="feature-card fade-in" onclick="openModal('therapistModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">🧑‍💼</span>
+            <h3>Therapist Network</h3>
+            <p>Connect with certified psychologists for therapy sessions and create personalized wellness plans.</p>
+        </div>
+
+        <!-- 6. Early Detection AI → modal quiz -->
+        <div class="feature-card fade-in" onclick="openModal('detectionModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">🔍</span>
+            <h3>Early Detection AI</h3>
+            <p>Advanced ML algorithms analyze behavioral patterns to detect early signs of depression and anxiety.</p>
+        </div>
+
+        <!-- 7. Guided Meditation → modal -->
+        <div class="feature-card fade-in" onclick="openModal('meditationModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">🧘</span>
+            <h3>Guided Meditation</h3>
+            <p>Curated meditation sessions, breathing exercises, mindfulness training, and relaxation therapies tailored to your state.</p>
+        </div>
+
+        <!-- 8. Wellness Music → modal -->
+        <div class="feature-card fade-in" onclick="openModal('musicModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">🎵</span>
+            <h3>Wellness Music</h3>
+            <p>Mood-based music playlists, ambient sounds, and binaural beats designed to promote relaxation and emotional healing.</p>
+        </div>
+
+        <!-- 9. Digital Journal → page -->
+        <div class="feature-card fade-in" onclick="window.location.href='journal.html'">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">📓</span>
+            <h3>Digital Journal</h3>
+            <p>Draw, write, add stickers — a full canvas journal to express your emotions freely and save your pages.</p>
+        </div>
+
+        <!-- 10. Health Dashboard → modal -->
+        <div class="feature-card fade-in" onclick="openModal('dashModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">📈</span>
+            <h3>Health Dashboard</h3>
+            <p>Comprehensive analytics with visual reports, mood trends, sleep data, and personalized recommendations.</p>
+        </div>
+
+        <!-- 11. Community Support → modal -->
+        <div class="feature-card fade-in" onclick="openModal('communityModal')">
+            <span class="feature-badge">LIVE ✓</span>
+            <span class="icon">💬</span>
+            <h3>Community Support</h3>
+            <p>Connect with others on similar journeys, share experiences anonymously, and build meaningful peer support.</p>
+        </div>
+
+        <!-- 12. Crisis Support → modal -->
+        <div class="feature-card fade-in" onclick="openModal('crisisModal')">
+            <span class="feature-badge">🆘 SOS</span>
+            <span class="icon">⚡</span>
+            <h3>Crisis Support</h3>
+            <p>Emergency hotline access, immediate crisis intervention, SOS features, and connections to mental health emergency services.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="panorama-section" id="about">
+    <div class="panorama-text">
+        <h2>Why Choose Manovritam AI?</h2>
+        <p>We combine cutting-edge AI with human expertise to provide comprehensive mental wellness support. Our platform detects early signs of mental health issues while connecting you with real doctors and therapists.</p>
+        <p>Whether you're struggling with anxiety, depression, or seeking preventive wellness, Manovritam AI is your trusted 24/7 companion — completely private, research-backed, and built with care.</p>
+        <button class="magnetic-btn" onclick="openSignUp()">Join Our Community Today</button>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+    <h2 class="section-title">Simple, Transparent Pricing</h2>
+    <div class="pricing-grid">
+        <div class="pricing-card fade-in">
+            <h3>Starter</h3><div class="price">Free</div>
+            <ul>
+                <li>✓ AI Chatbot (Limited)</li><li>✓ Mood Tracking</li>
+                <li>✓ Digital Journal</li><li>✓ Basic Meditations</li><li>✗ Doctor Access</li>
+            </ul>
+            <button class="magnetic-btn" onclick="openSignUp()">Get Started</button>
+        </div>
+        <div class="pricing-card featured fade-in">
+            <h3>Premium</h3><div class="price">₹999</div><p style="font-size:0.9rem;opacity:0.9;">per month</p>
+            <ul>
+                <li>✓ Unlimited AI Chatbot</li><li>✓ Advanced Mood Tracking</li>
+                <li>✓ 100+ Meditations</li><li>✓ Doctor Consultations</li>
+                <li>✓ Medication Manager</li><li>✓ Priority Support</li>
+            </ul>
+            <button class="magnetic-btn" onclick="openSignUp()">Start Free Trial</button>
+        </div>
+        <div class="pricing-card fade-in">
+            <h3>Professional</h3><div class="price">₹1,999</div><p style="font-size:0.9rem;">per month</p>
+            <ul>
+                <li>✓ Everything in Premium</li><li>✓ Therapist Sessions</li>
+                <li>✓ Personalized Wellness Plans</li><li>✓ Crisis Support (24/7)</li>
+                <li>✓ 1-on-1 Coaching</li>
+            </ul>
+            <button class="magnetic-btn" onclick="openSignUp()">Subscribe Now</button>
+        </div>
+    </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="features" style="background:linear-gradient(135deg,var(--light-bg) 0%,rgba(240,147,251,0.08) 100%);">
+    <h2 class="section-title">What Users Say</h2>
+    <div class="features-grid">
+        <div class="feature-card fade-in"><p style="margin-bottom:1rem;font-style:italic;">"Manovritam AI helped me recognize my anxiety patterns early. The chatbot is incredibly understanding."</p><strong>— Priya M.</strong><p style="color:#999;font-size:0.9rem;">Delhi</p></div>
+        <div class="feature-card fade-in"><p style="margin-bottom:1rem;font-style:italic;">"The mood tracker + journal combo helped me connect the dots between my habits and mental state."</p><strong>— Arjun K.</strong><p style="color:#999;font-size:0.9rem;">Mumbai</p></div>
+        <div class="feature-card fade-in"><p style="margin-bottom:1rem;font-style:italic;">"Connecting with doctors through the platform was seamless. The AI support at 3 AM was a lifesaver."</p><strong>— Sneha P.</strong><p style="color:#999;font-size:0.9rem;">Bangalore</p></div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="panorama-section">
+    <div class="panorama-text">
+        <h2>Frequently Asked Questions</h2>
+        <div style="text-align:left;max-width:700px;margin:2rem auto;">
+            <div style="margin-bottom:2rem;padding:1.5rem;background:white;border-radius:15px;cursor:pointer;" onclick="toggleFAQ(this)">
+                <h4 style="color:var(--primary);margin-bottom:0.5rem;">Is my data private and secure? ✓</h4>
+                <p style="display:none;color:#666;margin-top:1rem;">Yes! We use end-to-end encryption and HIPAA-compliant servers. Your mental health data is completely confidential.</p>
+            </div>
+            <div style="margin-bottom:2rem;padding:1.5rem;background:white;border-radius:15px;cursor:pointer;" onclick="toggleFAQ(this)">
+                <h4 style="color:var(--primary);margin-bottom:0.5rem;">Can I get a refund if not satisfied? ✓</h4>
+                <p style="display:none;color:#666;margin-top:1rem;">Absolutely! We offer a 30-day money-back guarantee, no questions asked.</p>
+            </div>
+            <div style="margin-bottom:2rem;padding:1.5rem;background:white;border-radius:15px;cursor:pointer;" onclick="toggleFAQ(this)">
+                <h4 style="color:var(--primary);margin-bottom:0.5rem;">Are the doctors licensed and verified? ✓</h4>
+                <p style="display:none;color:#666;margin-top:1rem;">Yes, all doctors and therapists are verified, licensed professionals with years of experience.</p>
+            </div>
+            <div style="margin-bottom:2rem;padding:1.5rem;background:white;border-radius:15px;cursor:pointer;" onclick="toggleFAQ(this)">
+                <h4 style="color:var(--primary);margin-bottom:0.5rem;">What if I need emergency support? ✓</h4>
+                <p style="display:none;color:#666;margin-top:1rem;">Our Crisis Support provides emergency hotline access 24/7. iCall: 9152987821</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:5rem;background:linear-gradient(135deg,var(--primary),var(--secondary));text-align:center;color:white;">
+    <h2 style="font-size:2.5rem;margin-bottom:1rem;">Ready to Transform Your Mental Health?</h2>
+    <p style="font-size:1.1rem;margin-bottom:2rem;opacity:0.95;">Join thousands of users already taking control of their mental wellness</p>
+    <button class="btn-primary" onclick="openSignUp()">Get Started — It's Free!</button>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div style="max-width:1200px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-bottom:2rem;text-align:left;">
+            <div><h4 style="margin-bottom:1rem;">Manovritam AI</h4><p>Your mental wellness companion powered by AI</p></div>
+            <div><h4 style="margin-bottom:1rem;">Product</h4><ul style="list-style:none;"><li><a href="#features" style="color:#999;text-decoration:none;">Features</a></li><li><a href="#pricing" style="color:#999;text-decoration:none;">Pricing</a></li><li><a href="mood-tracker.html" style="color:#999;text-decoration:none;">Mood Tracker</a></li><li><a href="journal.html" style="color:#999;text-decoration:none;">Journal</a></li></ul></div>
+            <div><h4 style="margin-bottom:1rem;">Support</h4><ul style="list-style:none;"><li><a href="#" style="color:#999;text-decoration:none;">Contact</a></li><li><a href="#" onclick="openModal('crisisModal')" style="color:#999;text-decoration:none;">Crisis Help</a></li></ul></div>
+            <div><h4 style="margin-bottom:1rem;">Legal</h4><ul style="list-style:none;"><li><a href="#" style="color:#999;text-decoration:none;">Privacy</a></li><li><a href="#" style="color:#999;text-decoration:none;">Terms</a></li></ul></div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:2rem;text-align:center;">
+            <p>© 2026 Manovritam AI | Mental Health Service For Healthy Society</p>
+            <p>🙂‍↕️Promoting GOOD HEALTH For All</p>
+            <p style="font-size:0.9rem;opacity:0.8;margin-top:1rem;">🆘 Crisis? iCall India: <strong>9152987821</strong> | Vandrevala Foundation: <strong>1860-2662-345</strong> (24/7)</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ALL FEATURE MODALS
+═══════════════════════════════════════════════════════════ -->
+
+<!-- AUTH MODAL (Unified Sign Up + Login tabs + Google Sign-In) -->
+<div id="authModal" class="modal">
+    <div class="modal-content" style="max-width:480px">
+        <span class="close" onclick="closeAuth()">&times;</span>
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tabSignup" onclick="switchAuthTab('signup')">Sign Up</button>
+            <button class="auth-tab" id="tabLogin" onclick="switchAuthTab('login')">Sign In</button>
+        </div>
+        <div id="authError" style="display:none;background:#fff1f2;color:#e11d48;padding:0.7rem 1rem;border-radius:8px;font-size:0.85rem;margin-bottom:1rem;border-radius:10px"></div>
+        <!-- Google -->
+        <button class="google-signin-btn" id="googleAuthBtn" onclick="triggerGoogleSignIn()">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+            <span>Continue with Google</span>
+        </button>
+        <div class="or-divider"><span>or continue with email</span></div>
+        <!-- Sign Up -->
+        <div id="signupFields">
+            <div class="form-group"><label>Full Name</label><input id="su_name" type="text" placeholder="Arjun Sharma" required></div>
+            <div class="form-group"><label>Email</label><input id="su_email" type="email" placeholder="you@email.com" required></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+                <div class="form-group"><label>Age</label><input id="su_age" type="number" placeholder="25" min="13"></div>
+                <div class="form-group"><label>Phone (optional)</label><input id="su_phone" type="tel" placeholder="+91 XXXXX"></div>
+            </div>
+            <div class="form-group">
+                <label>Primary Concern</label>
+                <select id="su_concern">
+                    <option value="general">General Wellness / सामान्य स्वास्थ्य</option>
+                    <option value="anxiety">Anxiety / चिंता</option>
+                    <option value="depression">Depression / अवसाद</option>
+                    <option value="stress">Stress / तनाव</option>
+                    <option value="sleep">Sleep Issues / नींद की समस्या</option>
+                    <option value="relationships">Relationships / रिश्ते</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Password</label><input id="su_password" type="password" placeholder="Create a strong password" required></div>
+            <button class="submit-btn" id="signupSubmitBtn" onclick="handleSignUp()">Create Account &amp; Get Free Access</button>
+        </div>
+        <!-- Login -->
+        <div id="loginFields" style="display:none">
+            <div class="form-group"><label>Email</label><input id="li_email" type="email" placeholder="you@email.com" required></div>
+            <div class="form-group"><label>Password</label><input id="li_password" type="password" placeholder="Your password" required></div>
+            <button class="submit-btn" id="loginSubmitBtn" onclick="handleLogin()">Sign In</button>
+        </div>
+    </div>
+</div>
+<!-- Hidden Google One-Tap -->
+<div id="g_id_onload" data-client_id="" data-callback="handleGoogleCredential" data-auto_prompt="false"></div>
+
+<!-- MEDICATION MANAGER MODAL -->
+<div id="medModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('medModal')">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">💊</div><div><h2 style="margin:0">Medication Manager</h2><p>Track your daily medications & reminders</p></div></div>
+        <ul class="med-list" id="medList">
+            <li class="med-item"><div class="med-item-left"><h4>Sertraline 50mg</h4><p>Daily • 8:00 AM • With food</p></div><span class="med-badge">✓ Taken</span></li>
+            <li class="med-item"><div class="med-item-left"><h4>Vitamin D3 1000 IU</h4><p>Daily • 9:00 AM</p></div><span class="med-badge">✓ Taken</span></li>
+            <li class="med-item"><div class="med-item-left"><h4>Melatonin 5mg</h4><p>Daily • 10:00 PM • Before sleep</p></div><span class="med-badge pending">⏰ Pending</span></li>
+        </ul>
+        <button class="add-med-btn" onclick="addMedication()">+ Add New Medication</button>
+        <div style="margin-top:1.2rem;padding:1rem;background:rgba(102,126,234,0.06);border-radius:12px;">
+            <p style="font-size:0.85rem;color:#555;margin:0;">💡 <strong>Tip:</strong> Set up SMS reminders to never miss a dose. Consistent medication is key to mental wellness.</p>
+        </div>
+    </div>
+</div>
+
+<!-- DOCTOR CONNECTIVITY MODAL -->
+<div id="doctorModal" class="modal">
+    <div class="modal-content wide">
+        <span class="close" onclick="closeModal('doctorModal')">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">👨‍⚕️</div><div><h2 style="margin:0">Doctor Connectivity</h2><p>Book consultations with verified psychiatrists</p></div></div>
+        <div class="doctor-grid">
+            <div class="doctor-card"><div class="doctor-avatar">👨‍⚕️</div><h4>Dr. Rajesh Sharma</h4><p>Psychiatrist · 12 yrs exp</p><div class="stars">★★★★★ 4.9</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available Today</p><button class="book-btn" onclick="bookDoctor('Dr. Rajesh Sharma')">Book Now</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">👩‍⚕️</div><h4>Dr. Priya Mehta</h4><p>Clinical Psychologist · 8 yrs</p><div class="stars">★★★★★ 4.8</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available Today</p><button class="book-btn" onclick="bookDoctor('Dr. Priya Mehta')">Book Now</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">👨‍⚕️</div><h4>Dr. Anil Verma</h4><p>Neuropsychiatrist · 15 yrs</p><div class="stars">★★★★☆ 4.7</div><p style="font-size:0.78rem;color:#f59e0b;margin-top:0.4rem;">🟡 Tomorrow</p><button class="book-btn" onclick="bookDoctor('Dr. Anil Verma')">Book Now</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">👩‍⚕️</div><h4>Dr. Sunita Rao</h4><p>Psychiatrist · 10 yrs exp</p><div class="stars">★★★★★ 4.9</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available Today</p><button class="book-btn" onclick="bookDoctor('Dr. Sunita Rao')">Book Now</button></div>
+        </div>
+    </div>
+</div>
+
+<!-- THERAPIST NETWORK MODAL -->
+<div id="therapistModal" class="modal">
+    <div class="modal-content wide">
+        <span class="close" onclick="closeModal('therapistModal')">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">🧑‍💼</div><div><h2 style="margin:0">Therapist Network</h2><p>Connect with certified psychologists</p></div></div>
+        <div class="doctor-grid">
+            <div class="doctor-card"><div class="doctor-avatar">🧑‍💼</div><h4>Dr. Kavita Singh</h4><p>CBT Therapist · Anxiety & Depression</p><div class="stars">★★★★★ 5.0</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available</p><button class="book-btn" onclick="bookDoctor('Dr. Kavita Singh')">Book Session</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">👩‍💼</div><h4>Ms. Ritu Agarwal</h4><p>Mindfulness-Based Therapy</p><div class="stars">★★★★★ 4.9</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available</p><button class="book-btn" onclick="bookDoctor('Ms. Ritu Agarwal')">Book Session</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">🧑‍💼</div><h4>Mr. Rohit Kapoor</h4><p>Trauma & PTSD Specialist</p><div class="stars">★★★★☆ 4.6</div><p style="font-size:0.78rem;color:#f59e0b;margin-top:0.4rem;">🟡 Tomorrow</p><button class="book-btn" onclick="bookDoctor('Mr. Rohit Kapoor')">Book Session</button></div>
+            <div class="doctor-card"><div class="doctor-avatar">👩‍💼</div><h4>Dr. Meena Joshi</h4><p>Couples & Family Therapy</p><div class="stars">★★★★★ 4.8</div><p style="font-size:0.78rem;color:#10b981;margin-top:0.4rem;">🟢 Available</p><button class="book-btn" onclick="bookDoctor('Dr. Meena Joshi')">Book Session</button></div>
+        </div>
+    </div>
+</div>
+
+<!-- EARLY DETECTION AI MODAL (Interactive Quiz) -->
+<div id="detectionModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('detectionModal');resetQuiz()">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">🔍</div><div><h2 style="margin:0">Early Detection AI</h2><p>Answer 5 quick questions for an assessment</p></div></div>
+        <div id="quizArea">
+            <div class="quiz-progress"><div class="quiz-progress-fill" id="quizProgressBar" style="width:20%"></div></div>
+            <div class="quiz-question" id="quizQuestion">Q1 of 5: Over the past 2 weeks, how often have you felt little interest or pleasure in doing things?</div>
+            <div class="quiz-options" id="quizOptions">
+                <button class="quiz-opt" onclick="selectOption(this, 0)">Not at all</button>
+                <button class="quiz-opt" onclick="selectOption(this, 1)">Several days</button>
+                <button class="quiz-opt" onclick="selectOption(this, 2)">More than half</button>
+                <button class="quiz-opt" onclick="selectOption(this, 3)">Nearly every day</button>
+            </div>
+            <button class="submit-btn" id="quizNextBtn" onclick="quizNext()" style="display:none">Next Question →</button>
+        </div>
+        <div id="quizResult" style="display:none"></div>
+    </div>
+</div>
+
+<!-- GUIDED MEDITATION MODAL -->
+<div id="meditationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('meditationModal');stopMeditation()">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">🧘</div><div><h2 style="margin:0">Guided Meditation</h2><p>Breathe. Focus. Heal.</p></div></div>
+        <div class="meditation-grid">
+            <div class="med-session" onclick="startMeditation(this,'Breathing Focus','4-7-8 breathing technique')"><div class="med-session-icon">🌬️</div><h4>Breathing Focus</h4><p>4-7-8 technique</p><div class="dur">⏱ 5 min</div></div>
+            <div class="med-session" onclick="startMeditation(this,'Body Scan','Progressive relaxation')"><div class="med-session-icon">🌊</div><h4>Body Scan</h4><p>Progressive relaxation</p><div class="dur">⏱ 10 min</div></div>
+            <div class="med-session" onclick="startMeditation(this,'Mindfulness','Present moment awareness')"><div class="med-session-icon">✨</div><h4>Mindfulness</h4><p>Present awareness</p><div class="dur">⏱ 7 min</div></div>
+            <div class="med-session" onclick="startMeditation(this,'Sleep Calm','Wind-down meditation')"><div class="med-session-icon">🌙</div><h4>Sleep Calm</h4><p>Wind-down meditation</p><div class="dur">⏱ 15 min</div></div>
+        </div>
+        <div id="breathingArea" style="display:none">
+            <div class="breathing-circle" id="breathCircle">Inhale...</div>
+            <p class="breathe-label" id="breathLabel">Follow the circle — breathe in as it expands, out as it contracts</p>
+            <button onclick="stopMeditation()" style="display:block;margin:1rem auto;padding:0.5rem 1.5rem;background:none;border:2px solid var(--primary);color:var(--primary);border-radius:20px;cursor:pointer;font-family:inherit;font-weight:700;">Stop Session</button>
+        </div>
+    </div>
+</div>
+
+<!-- WELLNESS MUSIC MODAL -->
+<div id="musicModal" class="modal">
+    <div class="modal-content" style="max-width:520px">
+        <span class="close" onclick="closeMusicModal()">&times;</span>
+        <div class="feature-modal-header">
+            <div class="feature-modal-icon">🎵</div>
+            <div><h2>Wellness Music</h2><p>Mood-based healing sounds</p></div>
+        </div>
+        <!-- Now Playing Bar -->
+        <div id="nowPlayingBox" style="display:none;background:linear-gradient(135deg,rgba(102,126,234,0.12),rgba(118,75,162,0.12));border:2px solid rgba(102,126,234,0.25);border-radius:16px;padding:1rem 1.2rem;margin-bottom:1rem;align-items:center;gap:1rem">
+            <div style="display:flex;gap:3px;align-items:flex-end;height:24px">
+                <div style="width:4px;background:var(--primary);border-radius:2px;animation:eq 0.8s ease-in-out infinite alternate"></div>
+                <div style="width:4px;background:var(--primary);border-radius:2px;animation:eq 0.8s ease-in-out 0.1s infinite alternate"></div>
+                <div style="width:4px;background:var(--primary);border-radius:2px;animation:eq 0.8s ease-in-out 0.2s infinite alternate"></div>
+                <div style="width:4px;background:var(--primary);border-radius:2px;animation:eq 0.8s ease-in-out 0.3s infinite alternate"></div>
+            </div>
+            <div style="flex:1">
+                <div style="font-weight:700;font-size:0.95rem" id="npTitle">Track Name</div>
+                <div style="font-size:0.78rem;color:#888;margin-top:0.2rem" id="npArtist">Artist</div>
+                <div id="progressBar" style="margin-top:0.5rem;height:5px;background:#e2e8f0;border-radius:4px;cursor:pointer" onclick="seekAudio(event)">
+                    <div id="progressFill" style="height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:4px;pointer-events:none"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.7rem;color:#aaa;margin-top:0.25rem">
+                    <span id="timeElapsed">0:00</span><span id="timeDuration">--:--</span>
+                </div>
+            </div>
+            <span id="npIcon" style="font-size:1.8rem">🎵</span>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0.4rem">
+                <button id="playPauseBtn" onclick="togglePlayPause()" style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));border:none;color:white;font-size:1.1rem;cursor:pointer">⏸</button>
+                <button onclick="stopAudio()" style="width:32px;height:32px;border-radius:50%;background:#f1f3f8;border:none;cursor:pointer;font-size:0.85rem">⏹</button>
+            </div>
+        </div>
+        <!-- Volume -->
+        <div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;padding:0.6rem 1rem;background:#f8f9fc;border-radius:10px">
+            <span style="font-size:1.1rem">🔊</span>
+            <input type="range" id="volumeSlider" min="0" max="100" value="70" oninput="setVolume(this.value)" style="flex:1;accent-color:var(--primary);cursor:pointer">
+            <span id="volLabel" style="font-size:0.8rem;color:#888;min-width:28px;text-align:right">70%</span>
+        </div>
+        <!-- Playlist -->
+        <ul class="playlist-list" id="playlistUL"></ul>
+        <p style="text-align:center;margin-top:0.8rem;font-size:0.75rem;color:#aaa">🎧 Free audio streams · Needs internet connection</p>
+    </div>
+</div>
+
+<!-- COMMUNITY SUPPORT MODAL -->
+<div id="communityModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('communityModal')">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">💬</div><div><h2 style="margin:0">Community Support</h2><p>You're not alone 💜 Share & connect</p></div></div>
+        <ul class="post-list" id="postList">
+            <li class="post-item"><div class="post-header"><div class="post-avatar">P</div><div class="post-meta"><h4>Anonymous User</h4><p>2 hours ago</p></div></div><div class="post-text">Today was tough but I made it through. The breathing exercise from the app really helped during my anxiety attack 💙</div><div class="post-actions"><button class="post-act-btn" onclick="likePost(this)">❤️ <span>12</span></button><button class="post-act-btn">💬 Reply</button></div></li>
+            <li class="post-item"><div class="post-header"><div class="post-avatar" style="background:linear-gradient(135deg,#10b981,#059669)">R</div><div class="post-meta"><h4>Anonymous User</h4><p>5 hours ago</p></div></div><div class="post-text">30 days of mood tracking complete! Realized I feel better on days I exercise and journal. Small habits = big changes 🌱</div><div class="post-actions"><button class="post-act-btn" onclick="likePost(this)">❤️ <span>28</span></button><button class="post-act-btn">💬 Reply</button></div></li>
+            <li class="post-item"><div class="post-header"><div class="post-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">A</div><div class="post-meta"><h4>Anonymous User</h4><p>1 day ago</p></div></div><div class="post-text">First therapy session booked through Manovritam! Nervous but hopeful. Thank you community for the encouragement 🙏</div><div class="post-actions"><button class="post-act-btn" onclick="likePost(this)">❤️ <span>45</span></button><button class="post-act-btn">💬 Reply</button></div></li>
+        </ul>
+        <div class="community-input">
+            <input type="text" id="communityPostInput" placeholder="Share something (anonymous)..." />
+            <button onclick="addPost()">Post</button>
+        </div>
+    </div>
+</div>
+
+<!-- CRISIS SUPPORT MODAL -->
+<div id="crisisModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('crisisModal')">&times;</span>
+        <div class="feature-modal-header"><div class="feature-modal-icon">⚡</div><div><h2 style="margin:0">Crisis Support</h2><p>You are not alone. Help is here.</p></div></div>
+        <button class="sos-btn" onclick="triggerSOS()">🆘 EMERGENCY SOS — Call Now</button>
+        <ul class="crisis-numbers">
+            <li class="crisis-num" onclick="callNumber('9152987821')"><div class="crisis-num-icon">📞</div><div class="crisis-num-info"><h4>iCall India</h4><p>Mon-Sat, 8AM-10PM</p></div><div class="crisis-num-num">9152987821</div></li>
+            <li class="crisis-num" onclick="callNumber('18602662345')"><div class="crisis-num-icon">🏥</div><div class="crisis-num-info"><h4>Vandrevala Foundation</h4><p>24/7 — Free helpline</p></div><div class="crisis-num-num">1860-2662-345</div></li>
+            <li class="crisis-num" onclick="callNumber('18005990019')"><div class="crisis-num-icon">🤝</div><div class="crisis-num-info"><h4>NIMHANS Helpline</h4><p>24/7 — National Institute</p></div><div class="crisis-num-num">1800-599-0019</div></li>
+            <li class="crisis-num" onclick="callNumber('112')"><div class="crisis-num-icon">🚨</div><div class="crisis-num-info"><h4>Emergency Services</h4><p>Police / Ambulance / Fire</p></div><div class="crisis-num-num">112</div></li>
+        </ul>
+        <div class="crisis-tips">
+            <h4>🧘 While you wait for help:</h4>
+            <ul>
+                <li>Take slow, deep breaths — breathe in for 4 counts, out for 6</li>
+                <li>Ground yourself: name 5 things you can see around you</li>
+                <li>Move to a safe, quiet space if possible</li>
+                <li>Text a trusted person — you don't have to be alone</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- CHATBOT WIDGET - WITH FULL SCREEN BUTTON -->
+<div id="chatWidget">
+    <div id="chatWindow">
+        <div class="chat-header">
+            <div class="chat-header-avatar">🧠</div>
+            <div class="chat-header-info">
+                <h4>Manovritam AI</h4>
+                <p><span class="chat-status"></span>Online & ready to listen</p>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button id="chatFullscreenBtn" onclick="toggleChatFullscreen()">⛶</button>
+                <button id="chatClose">×</button>
+            </div>
+        </div>
+        <div id="chatMessages"></div>
+        <div class="quick-replies" id="quickReplies">
+            <button class="qr-btn" onclick="sendQuick('I am feeling anxious today 😰')">Feeling anxious</button>
+            <button class="qr-btn" onclick="sendQuick('I need help with stress')">Stress help</button>
+            <button class="qr-btn" onclick="sendQuick('Teach me a breathing exercise')">Breathing</button>
+            <button class="qr-btn" onclick="sendQuick('I feel lonely 😔')">Feeling lonely</button>
+        </div>
+        <div class="chat-input-row">
+            <textarea id="chatInput" placeholder="Share how you're feeling..." rows="1"></textarea>
+            <button id="chatSend">➤</button>
+        </div>
+    </div>
+    <button id="chatToggle"><span id="chatToggleIcon">🧠</span><div id="chatBadge"></div></button>
+</div>
+
+<script>
+const API_BASE = 'http://localhost:5000/api';
+let chatSessionId = localStorage.getItem('manovritam_session') || null;
+let currentUser   = JSON.parse(localStorage.getItem('manovritam_user') || 'null');
+let curLang       = localStorage.getItem('mv_lang') || 'en';
+let chatLang      = curLang;
+
+// ── TRANSLATIONS ─────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    navFeatures:'Features', navAbout:'About', navPricing:'Pricing', navMood:'Mood Tracker', navJournal:'Journal',
+    navBtn:'Get Started Free', navLogout:'Log Out',
+    heroTitle:'Your AI-Powered Mental Wellness Companion',
+    heroTagline:'Track moods, journal thoughts, breathe, meditate — and get 24/7 emotional support powered by AI. Now in English & हिंदी.',
+    heroCta1:'🚀 Start Your Journey — Free', heroCta2:'💬 Talk to Manovritam',
+    googleBtn:'Continue with Google', orText:'or continue with email',
+    chatStatus:'Online & ready to listen', chatLangLabel:'Chat language:',
+    chatHint:'Press Enter to send · Shift+Enter for new line',
+    greeting: (n) => `Namaste ${n}! 🙏 I'm Manovritam, your AI mental wellness companion. How are you feeling today? I'm here — no judgment, only care. 💜`,
+    greetBack: (n) => `Welcome back, ${n}! 💜 How are you feeling today?`,
+    greetGoogle: (n) => `Namaste ${n}! 🙏 Great to have you here. How are you feeling today?`,
+    qr: [['😰 Feeling anxious','I am feeling really anxious today'],['😢 Feeling sad','I feel sad and I don\'t know why'],['🌬️ Breathing exercise','Teach me a breathing exercise right now'],['💪 Need motivation','I need some motivation and encouragement today']],
+    serverDown: "⚠️ Server not running. Open terminal and run: node server.js",
+    googleNotConfigured: "Google Sign-In is not configured yet.\n\nTo enable it:\n1. Add GOOGLE_CLIENT_ID to your .env file\n2. Restart the server\n\nFor now, please use email signup below!",
+    authErrPrefix: ''
+  },
+  hi: {
+    navFeatures:'सुविधाएं', navAbout:'हमारे बारे में', navPricing:'मूल्य', navMood:'मूड ट्रैकर', navJournal:'डायरी',
+    navBtn:'मुफ़्त शुरू करें', navLogout:'लॉग आउट',
+    heroTitle:'आपका AI मानसिक स्वास्थ्य साथी',
+    heroTagline:'मूड ट्रैक करें, डायरी लिखें, ध्यान करें — और AI से 24/7 भावनात्मक सहायता पाएं। अंग्रेज़ी और हिंदी में।',
+    heroCta1:'🚀 अभी शुरू करें — मुफ़्त', heroCta2:'💬 मनोवृत्ति से बात करें',
+    googleBtn:'Google से जारी रखें', orText:'या ईमेल से जारी रखें',
+    chatStatus:'ऑनलाइन और सुनने को तैयार', chatLangLabel:'चैट भाषा:',
+    chatHint:'भेजने के लिए Enter दबाएं · नई लाइन के लिए Shift+Enter',
+    greeting: (n) => `Namaste ${n}! 🙏 Main Manovritam hoon — aapka AI mental health saathi. Aaj aap kaisa feel kar rahe hain? Main yahaan hoon, bina kisi judgment ke. 💜`,
+    greetBack: (n) => `Wapas aagaye, ${n}! 💜 Aaj kaisa feel kar rahe hain?`,
+    greetGoogle: (n) => `Namaste ${n}! 🙏 Bahut khushi hui aapko yahan dekhke. Aaj kaisa feel kar rahe hain?`,
+    qr: [['😰 Chinta ho rahi hai','Main aaj bahut anxious feel kar raha hoon'],['😢 Udaas hoon','Main bahut udaas hoon, samajh nahi aa raha'],['🌬️ Saas ka abhyas','Ek breathing exercise sikhao abhi'],['💪 Motivation chahiye','Mujhe aaj thodi motivation aur encouragement chahiye']],
+    serverDown: "⚠️ Server nahi chal raha. Terminal mein chalayein: node server.js",
+    googleNotConfigured: "Google Sign-In abhi configure nahi hai.\n\nEnable karne ke liye:\n1. .env file mein GOOGLE_CLIENT_ID add karein\n2. Server restart karein\n\nAbhee ke liye, neeche email signup use karein!",
+    authErrPrefix: ''
+  }
+};
+
+function t(key) { return (T[curLang] || T.en)[key] || T.en[key] || key; }
+
+// ── LANGUAGE SYSTEM ───────────────────────────────────────────────────────────
+function setLang(l) {
+  curLang = l; chatLang = l;
+  localStorage.setItem('mv_lang', l);
+  document.getElementById('langEN').classList.toggle('active', l === 'en');
+  document.getElementById('langHI').classList.toggle('active', l === 'hi');
+  applyTranslations();
+}
+
+function setChatLang(l, btn) {
+  chatLang = l;
+  document.querySelectorAll('.clang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateQuickReplies();
+  const hint = document.getElementById('chatHint');
+  if (hint) hint.textContent = T[l].chatHint || T.en.chatHint;
+  const lbl = document.getElementById('chatLangLabel');
+  if (lbl) lbl.textContent = T[l].chatLangLabel || T.en.chatLangLabel;
+  const sts = document.getElementById('chatStatusText');
+  if (sts) sts.textContent = T[l].chatStatus;
+}
+
+function applyTranslations() {
+  const l = curLang;
+  // Nav
+  const nf=document.getElementById('nav-features'), na=document.getElementById('nav-about'),
+        np=document.getElementById('nav-pricing'), nm=document.getElementById('nav-mood'), nj=document.getElementById('nav-journal');
+  if(nf) nf.textContent = T[l].navFeatures;
+  if(na) na.textContent = T[l].navAbout;
+  if(np) np.textContent = T[l].navPricing;
+  if(nm) nm.textContent = T[l].navMood;
+  if(nj) nj.textContent = T[l].navJournal;
+  // Nav button
+  const nb = document.getElementById('navAuthBtn');
+  if (nb && nb.textContent !== T[l === 'en' ? 'hi' : 'en'].navLogout) nb.textContent = T[l].navBtn;
+  // Hero
+  const h1 = document.querySelector('.hero h1');
+  if (h1) h1.textContent = T[l].heroTitle;
+  const tl = document.querySelector('.tagline');
+  if (tl) tl.textContent = T[l].heroTagline;
+  const cb = document.querySelector('.btn-primary');
+  if (cb) cb.textContent = T[l].heroCta1;
+  const cb2 = document.querySelector('.btn-secondary');
+  if (cb2) cb2.textContent = T[l].heroCta2;
+  // Auth modal
+  const gb = document.getElementById('googleAuthBtn');
+  if (gb) gb.querySelector('span').textContent = T[l].googleBtn;
+  const od = document.querySelector('.or-divider span');
+  if (od) od.textContent = T[l].orText;
+  // Chat
+  const cs = document.getElementById('chatStatusText');
+  if (cs) cs.textContent = T[l].chatStatus;
+  const cl = document.getElementById('chatLangLabel');
+  if (cl) cl.textContent = T[l].chatLangLabel;
+  const ch = document.getElementById('chatHint');
+  if (ch) ch.textContent = T[l].chatHint;
+  updateQuickReplies();
+}
+
+function updateQuickReplies() {
+  const qr = document.getElementById('quickReplies');
+  if (!qr) return;
+  const replies = T[chatLang]?.qr || T.en.qr;
+  qr.innerHTML = replies.map(([label, msg]) =>
+    `<button class="qr-btn" onclick="sendQuick('${msg.replace(/'/g,"\\'")}')">${label}</button>`
+  ).join('');
+}
+
+// ── MODAL / AUTH HELPERS ──────────────────────────────────────────────────────
+function openSignUp() { document.getElementById('authModal').style.display='block'; document.body.style.overflow='hidden'; switchAuthTab('signup'); }
+function closeAuth()  { document.getElementById('authModal').style.display='none'; document.body.style.overflow='auto'; }
+
+function switchAuthTab(tab) {
+  document.getElementById('tabSignup').classList.toggle('active', tab==='signup');
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('signupFields').style.display = tab==='signup' ? 'block' : 'none';
+  document.getElementById('loginFields').style.display  = tab==='login'  ? 'block' : 'none';
+  document.getElementById('authError').style.display = 'none';
+}
+function showAuthErr(msg) {
+  const e = document.getElementById('authError'); e.textContent = msg; e.style.display = 'block';
+}
+// keep legacy
+function openLogin()     { openSignUp(); switchAuthTab('login'); }
+function closeLogin()    { closeAuth(); }
+function closeSignUp()   { closeAuth(); }
+function switchToLogin() { switchAuthTab('login'); }
+function switchToSignup(){ switchAuthTab('signup'); }
+function openModal(id)   { document.getElementById(id).style.display='block'; document.body.style.overflow='hidden'; }
+function closeModal(id)  { document.getElementById(id).style.display='none'; document.body.style.overflow='auto'; }
+
+window.onclick = (e) => {
+    document.querySelectorAll('.modal').forEach(m => {
+        if (e.target === m) { m.style.display='none'; document.body.style.overflow='auto'; }
+    });
+};
+
+// ── SET LOGGED IN STATE ───────────────────────────────────────────────────────
+function setLoggedIn(user) {
+  currentUser = user;
+  localStorage.setItem('manovritam_user', JSON.stringify(user));
+  const chip = document.getElementById('userChip');
+  const initials = user.name ? user.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() : '?';
+  chip.style.display = 'flex';
+  chip.className = 'user-chip';
+  chip.innerHTML = user.picture
+    ? `<img src="${user.picture}" alt="avatar" onerror="this.style.display='none'"><span>${user.name.split(' ')[0]}</span>`
+    : `<div class="user-initials">${initials}</div><span>${user.name.split(' ')[0]}</span>`;
+  const nb = document.getElementById('navAuthBtn');
+  nb.textContent = T[curLang].navLogout;
+  nb.onclick = doLogout;
+}
+function doLogout() {
+  currentUser = null; chatSessionId = null;
+  localStorage.removeItem('manovritam_user'); localStorage.removeItem('manovritam_session');
+  document.getElementById('userChip').style.display = 'none';
+  const nb = document.getElementById('navAuthBtn');
+  nb.textContent = T[curLang].navBtn; nb.onclick = openSignUp;
+}
+
+// ── EMAIL AUTH ────────────────────────────────────────────────────────────────
+async function handleSignUp() {
+  const btn = document.getElementById('signupSubmitBtn');
+  btn.textContent = curLang==='hi' ? 'बन रहा है...' : 'Creating...'; btn.disabled = true;
+  document.getElementById('authError').style.display = 'none';
+  try {
+    const res = await fetch(`${API_BASE}/signup`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ name: document.getElementById('su_name').value, email: document.getElementById('su_email').value,
+        phone: document.getElementById('su_phone').value, age: document.getElementById('su_age').value,
+        concern: document.getElementById('su_concern').value, password: document.getElementById('su_password').value })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Signup failed');
+    chatSessionId = data.sessionId;
+    localStorage.setItem('manovritam_session', chatSessionId);
+    setLoggedIn(data.user);
+    closeAuth();
+    const msg = curLang==='hi' ? `🎉 Swagat hai, ${data.user.name}! Manovritam AI mein aapka swagat hai. 💜` : `🎉 Welcome to Manovritam AI, ${data.user.name}! Your account is ready.`;
+    alert(msg);
+  } catch (err) { showAuthErr(err.message); }
+  finally { btn.textContent = curLang==='hi' ? 'अकाउंट बनाएं' : 'Create Account & Get Free Access'; btn.disabled = false; }
+}
+
+async function handleLogin() {
+  const btn = document.getElementById('loginSubmitBtn');
+  btn.textContent = curLang==='hi' ? 'साइन इन हो रहा है...' : 'Signing in...'; btn.disabled = true;
+  document.getElementById('authError').style.display = 'none';
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email: document.getElementById('li_email').value, password: document.getElementById('li_password').value })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+    chatSessionId = data.sessionId;
+    localStorage.setItem('manovritam_session', chatSessionId);
+    setLoggedIn(data.user);
+    closeAuth();
+    addBotMsg(T[chatLang].greetBack(data.user.name.split(' ')[0]));
+    openChatWindow();
+  } catch (err) { showAuthErr(err.message); }
+  finally { btn.textContent = curLang==='hi' ? 'साइन इन' : 'Sign In'; btn.disabled = false; }
+}
+
+// ── GOOGLE SIGN-IN ────────────────────────────────────────────────────────────
+function triggerGoogleSignIn() {
+  const el = document.getElementById('g_id_onload');
+  const clientId = el ? el.dataset.clientId : '';
+  if (!clientId || clientId === '' || clientId === 'YOUR_GOOGLE_CLIENT_ID') {
+    showAuthErr(T[curLang].googleNotConfigured.replace(/\n/g, ' '));
+    return;
+  }
+  try { google.accounts.id.prompt(); } catch(e) { showAuthErr('Google Sign-In unavailable. Please use email login.'); }
+}
+
+async function handleGoogleCredential(response) {
+  document.getElementById('authError').style.display = 'none';
+  try {
+    const res = await fetch(`${API_BASE}/auth/google`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ credential: response.credential })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Google sign-in failed');
+    chatSessionId = data.sessionId;
+    localStorage.setItem('manovritam_session', chatSessionId);
+    setLoggedIn(data.user);
+    closeAuth();
+    addBotMsg(T[chatLang].greetGoogle(data.user.name.split(' ')[0]));
+    openChatWindow();
+  } catch (err) { showAuthErr(err.message); }
+}
+
+// Load Google client ID from server and initialize
+fetch(`${API_BASE}/health`).then(r=>r.json()).then(d => {
+  if (d.googleClientId) {
+    const el = document.getElementById('g_id_onload');
+    if (el) { el.dataset.clientId = d.googleClientId; }
+    if (window.google?.accounts?.id) {
+      google.accounts.id.initialize({ client_id: d.googleClientId, callback: handleGoogleCredential });
+    }
+  }
+}).catch(() => {});
+
+// ── GENERIC MODAL HELPERS (kept for feature modals) ───────────────────────────
+function toggleFAQ(element) {
+  const answer = element.querySelector('p');
+  if (answer.style.display === 'none' || !answer.style.display) { answer.style.display = 'block'; element.style.background = 'rgba(102,126,234,0.1)'; }
+  else { answer.style.display = 'none'; element.style.background = 'white'; }
+}
+
+// ── MEDICATION MANAGER ────────────────────────────────────────────────────────
+function addMedication() {
+  const name = prompt(curLang==='hi' ? 'दवाई का नाम और खुराक:' : 'Medication name and dosage:');
+  const time = prompt(curLang==='hi' ? 'रिमाइंडर समय (जैसे 8:00 AM):' : 'Reminder time (e.g. 8:00 AM):');
+  if (!name) return;
+  const li = document.createElement('li'); li.className = 'med-item';
+  li.innerHTML = `<div class="med-item-left"><h4>${name}</h4><p>Daily · ${time||'TBD'}</p></div><span class="med-badge pending">⏰ Pending</span>`;
+  document.getElementById('medList').appendChild(li);
+}
+
+// ── DOCTOR / THERAPIST ────────────────────────────────────────────────────────
+function bookDoctor(name) {
+  const date = prompt(`${curLang==='hi' ? name+' के साथ अपॉइंटमेंट बुक करें\nतारीख दर्ज करें:' : 'Book appointment with '+name+'\nEnter preferred date:'}`);
+  if (date) alert(`✅ ${curLang==='hi'?'अपॉइंटमेंट कन्फर्म!':'Appointment confirmed!'}\n\n${name}\n${date}`);
+}
+
+// ── EARLY DETECTION QUIZ ──────────────────────────────────────────────────────
+const questions = [
+  { q: 'Q1/5: Over the past 2 weeks, how often have you felt little interest or pleasure?', opts: ['Not at all', 'Several days', 'More than half', 'Nearly every day'] },
+  { q: 'Q2/5: How often have you felt down, depressed, or hopeless?', opts: ['Not at all', 'Several days', 'More than half', 'Nearly every day'] },
+  { q: 'Q3/5: How often have you had trouble sleeping or sleeping too much?', opts: ['Not at all', 'Several days', 'More than half', 'Nearly every day'] },
+  { q: 'Q4/5: How often have you felt nervous, anxious, or on edge?', opts: ['Not at all', 'Several days', 'More than half', 'Nearly every day'] },
+  { q: 'Q5/5: How often have you had difficulty concentrating?', opts: ['Not at all', 'Several days', 'More than half', 'Nearly every day'] },
+];
+let quizIndex = 0, quizScore = 0, selectedVal = -1;
+
+function selectOption(btn, val) {
+  document.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected'); selectedVal = val;
+  document.getElementById('quizNextBtn').style.display = 'block';
+}
+function quizNext() {
+  if (selectedVal < 0) return;
+  quizScore += selectedVal; quizIndex++; selectedVal = -1;
+  if (quizIndex < questions.length) {
+    document.getElementById('quizProgressBar').style.width = ((quizIndex+1)/questions.length*100)+'%';
+    document.getElementById('quizQuestion').textContent = questions[quizIndex].q;
+    document.querySelectorAll('.quiz-opt').forEach((btn,i) => { btn.classList.remove('selected'); btn.textContent = questions[quizIndex].opts[i]; btn.onclick = () => selectOption(btn, i); });
+    document.getElementById('quizNextBtn').style.display = 'none';
+  } else { showQuizResult(); }
+}
+function showQuizResult() {
+  document.getElementById('quizArea').style.display = 'none';
+  const res = document.getElementById('quizResult'); res.style.display = 'block';
+  let level, msg, cls, emoji;
+  if (quizScore <= 4)      { level='Low Risk'; cls='low'; emoji='🟢'; msg='Great news! Your responses suggest low levels of distress. Keep up your healthy habits.'; }
+  else if (quizScore <= 9) { level='Moderate Risk'; cls='medium'; emoji='🟡'; msg='Some moderate distress detected. Consider talking to a counselor. Use the meditation and breathing features.'; }
+  else                     { level='Elevated Risk'; cls='high'; emoji='🔴'; msg='Your responses suggest elevated distress. Please reach out to a mental health professional. iCall: 9152987821.'; }
+  res.innerHTML = `<div class="result-box ${cls}"><h3>${emoji} ${level}</h3><p>${msg}</p><button class="submit-btn" style="margin-top:1rem" onclick="sendQuick('My early detection quiz showed ${level}. Can you help me?');closeModal('detectionModal');openChatWindow()">💬 Talk to Manovritam AI</button></div>`;
+}
+
+// ── MEDITATION ────────────────────────────────────────────────────────────────
+let breathInterval;
+function startMeditation(el, title, desc) {
+  document.querySelectorAll('.med-session').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  const circle = document.querySelector('.breathing-circle');
+  const label  = document.querySelector('.breathe-label');
+  document.getElementById('breathingArea').style.display = 'block';
+  if (breathInterval) clearTimeout(breathInterval);
+  const phases = [
+    { text: 'Breathe In...', dur: 4000 }, { text: 'Hold 🤲', dur: 4000 },
+    { text: 'Breathe Out...', dur: 4000 }, { text: 'Hold 🌿', dur: 2000 }
+  ];
+  let p = 0;
+  const next = () => { circle.textContent = phases[p].text; label.textContent = `${title}: ${phases[p].text.replace('...','')}`; breathInterval = setTimeout(()=>{ p=(p+1)%phases.length; next(); }, phases[p].dur); };
+  next();
+}
+function stopMeditation() {
+  clearTimeout(breathInterval);
+  document.getElementById('breathingArea').style.display = 'none';
+  document.querySelectorAll('.med-session').forEach(s => s.classList.remove('active'));
+}
+
+// ── WELLNESS MUSIC ────────────────────────────────────────────────────────────
+const TRACKS = [
+  { id:'ocean',  icon:'🌊', title:'Calm Ocean Waves',   artist:'Ocean Therapy · Nature Sounds' },
+  { id:'rain',   icon:'⛈️', title:'Rain & Thunder',      artist:'Nature Sounds · Relaxing'      },
+  { id:'hz432',  icon:'🎶', title:'432 Hz Healing',      artist:'Binaural Beats · Focus'        },
+  { id:'forest', icon:'🌲', title:'Forest Morning',      artist:'Ambient Nature · Birds'        },
+  { id:'sleep',  icon:'😴', title:'Deep Sleep Alpha',    artist:'Delta Waves · Sleep Aid'       },
+];
+
+const AUDIO_FALLBACKS = {
+  ocean:  [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
+  ],
+  rain:   [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
+  ],
+  hz432:  [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+  ],
+  forest: [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
+  ],
+  sleep:  [
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
+    'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',
+  ],
+};
+
+let audioEl        = null;
+let currentTrackId = null;
+let progressTimer  = null;
+let fallbackIndex  = {};
+
+function initPlaylist() {
+  const ul = document.getElementById('playlistUL');
+  if (!ul || ul.children.length > 0) return;
+  TRACKS.forEach(t => {
+    const li = document.createElement('li');
+    li.className = 'playlist-item';
+    li.id = 'track_' + t.id;
+    li.innerHTML = `
+      <div class="playlist-thumb" style="font-size:1.8rem;width:46px;height:46px;display:flex;align-items:center;justify-content:center;background:#f1f3f8;border-radius:10px">${t.icon}</div>
+      <div class="playlist-info" style="flex:1">
+        <h4 style="margin:0 0 0.2rem;font-size:0.95rem">${t.title}</h4>
+        <p style="margin:0;font-size:0.78rem;color:#888">${t.artist}</p>
+      </div>
+      <span style="font-size:0.8rem;color:#aaa;min-width:35px;text-align:right" id="dur_${t.id}">--:--</span>
+      <button class="play-btn" id="btn_${t.id}" onclick="playTrackById('${t.id}')"
+        style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);border:none;color:white;font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:0.6rem;flex-shrink:0">▶</button>`;
+    ul.appendChild(li);
+  });
+}
+
+function playTrackById(id) {
+  const track = TRACKS.find(t => t.id === id);
+  if (!track) return;
+
+  if (currentTrackId === id && audioEl) {
+    togglePlayPause();
+    return;
+  }
+
+  _stopAndClean();
+  currentTrackId = id;
+  fallbackIndex[id] = fallbackIndex[id] || 0;
+
+  _loadAndPlay(id, fallbackIndex[id]);
+}
+
+function _loadAndPlay(id, urlIdx) {
+  const track = TRACKS.find(t => t.id === id);
+  const urls  = AUDIO_FALLBACKS[id];
+  if (urlIdx >= urls.length) {
+    _setStatus(id, '❌ Audio unavailable — check internet connection');
+    return;
+  }
+
+  const url = urls[urlIdx];
+  audioEl = new Audio(url);
+  audioEl.volume = (document.getElementById('volumeSlider')?.value || 70) / 100;
+  audioEl.loop   = true;
+
+  _markPlaying(id);
+  _setStatus(id, '⏳ Loading...');
+  document.getElementById('playPauseBtn').textContent = '⏳';
+
+  audioEl.addEventListener('loadedmetadata', () => {
+    const d = audioEl.duration;
+    const durEl = document.getElementById('dur_' + id);
+    if (durEl) durEl.textContent = isFinite(d) ? fmtTime(d) : '∞';
+    document.getElementById('timeDuration').textContent = isFinite(d) ? fmtTime(d) : '∞';
+  });
+
+  audioEl.addEventListener('canplay', () => {
+    audioEl.play().then(() => {
+      _setStatus(id, track.artist);
+      document.getElementById('playPauseBtn').textContent = '⏸';
+      document.getElementById('btn_' + id).textContent = '⏸';
+      _startProgressTimer();
+    }).catch(err => {
+      _setStatus(id, '▶ Tap play button to start');
+      document.getElementById('playPauseBtn').textContent = '▶';
+      document.getElementById('btn_' + id).textContent = '▶';
+    });
+  });
+
+  audioEl.addEventListener('error', () => {
+    console.warn('Audio error on URL:', url, '— trying next fallback');
+    fallbackIndex[id] = urlIdx + 1;
+    _loadAndPlay(id, fallbackIndex[id]);
+  });
+
+  audioEl.load();
+}
+
+function _markPlaying(id) {
+  document.querySelectorAll('.playlist-item').forEach(p => p.classList.remove('playing'));
+  const li = document.getElementById('track_' + id);
+  if (li) li.classList.add('playing');
+  document.querySelectorAll('.play-btn').forEach(b => b.textContent = '▶');
+
+  const track = TRACKS.find(t => t.id === id);
+  document.getElementById('nowPlayingBox').style.display = 'flex';
+  document.getElementById('npIcon').textContent  = track.icon;
+  document.getElementById('npTitle').textContent = track.title;
+  document.getElementById('progressFill').style.width  = '0%';
+  document.getElementById('timeElapsed').textContent   = '0:00';
+  document.getElementById('timeDuration').textContent  = '--:--';
+}
+
+function _setStatus(id, msg) {
+  document.getElementById('npArtist').textContent = msg;
+}
+
+function _startProgressTimer() {
+  clearInterval(progressTimer);
+  progressTimer = setInterval(() => {
+    if (!audioEl || audioEl.paused || !audioEl.duration) return;
+    const pct = (audioEl.currentTime / audioEl.duration) * 100;
+    document.getElementById('progressFill').style.width  = pct + '%';
+    document.getElementById('timeElapsed').textContent   = fmtTime(audioEl.currentTime);
+    if (isFinite(audioEl.duration))
+      document.getElementById('timeDuration').textContent = fmtTime(audioEl.duration);
+  }, 500);
+}
+
+function _stopAndClean() {
+  clearInterval(progressTimer);
+  if (audioEl) {
+    audioEl.pause();
+    audioEl.src = '';
+    audioEl = null;
+  }
+  currentTrackId = null;
+}
+
+function togglePlayPause() {
+  if (!audioEl) return;
+  if (audioEl.paused) {
+    audioEl.play().then(() => {
+      document.getElementById('playPauseBtn').textContent = '⏸';
+      if (currentTrackId) document.getElementById('btn_' + currentTrackId).textContent = '⏸';
+      _startProgressTimer();
+    }).catch(() => {});
+  } else {
+    audioEl.pause();
+    clearInterval(progressTimer);
+    document.getElementById('playPauseBtn').textContent = '▶';
+    if (currentTrackId) document.getElementById('btn_' + currentTrackId).textContent = '▶';
+  }
+}
+
+function stopAudio() {
+  _stopAndClean();
+  document.getElementById('nowPlayingBox').style.display = 'none';
+  document.querySelectorAll('.playlist-item').forEach(p => p.classList.remove('playing'));
+  document.querySelectorAll('.play-btn').forEach(b => b.textContent = '▶');
+}
+
+function seekAudio(e) {
+  if (!audioEl || !audioEl.duration) return;
+  const bar  = document.getElementById('progressBar');
+  const rect = bar.getBoundingClientRect();
+  const pct  = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  audioEl.currentTime = pct * audioEl.duration;
+}
+
+function setVolume(val) {
+  if (audioEl) audioEl.volume = val / 100;
+  document.getElementById('volLabel').textContent = val + '%';
+}
+
+function closeMusicModal() {
+  stopAudio();
+  closeModal('musicModal');
+}
+
+function fmtTime(s) {
+  if (!isFinite(s)) return '∞';
+  const m   = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + String(sec).padStart(2, '0');
+}
+
+function playTrack(el, title, artist, icon, dur) {
+  const map = {'Calm Waves':'ocean','Rain & Thunder':'rain','432 Hz Healing':'hz432','Forest Morning':'forest','Deep Sleep Alpha':'sleep'};
+  playTrackById(map[title] || 'ocean');
+}
+
+const _origOpenModal = openModal;
+openModal = function(id) {
+  _origOpenModal(id);
+  if (id === 'musicModal') initPlaylist();
+};
+
+// ── FULL SCREEN CHAT FUNCTION ─────────────────────────────────────────────────
+function toggleChatFullscreen() {
+    const chatWindow = document.getElementById('chatWindow');
+    const fullscreenBtn = document.getElementById('chatFullscreenBtn');
+    
+    chatWindow.classList.toggle('fullscreen');
+    
+    if (chatWindow.classList.contains('fullscreen')) {
+        fullscreenBtn.innerHTML = '✕';
+        fullscreenBtn.style.fontSize = '1.5rem';
+    } else {
+        fullscreenBtn.innerHTML = '⛶';
+        fullscreenBtn.style.fontSize = '1.2rem';
+    }
+    
+    setTimeout(() => {
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 100);
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const chatWindow = document.getElementById('chatWindow');
+        const fullscreenBtn = document.getElementById('chatFullscreenBtn');
+        if (chatWindow.classList.contains('fullscreen')) {
+            chatWindow.classList.remove('fullscreen');
+            fullscreenBtn.innerHTML = '⛶';
+            fullscreenBtn.style.fontSize = '1.2rem';
+        }
+    }
+});
+
+// ── COMMUNITY ─────────────────────────────────────────────────────────────────
+function likePost(btn) { const span = btn.querySelector('span'); span.textContent = parseInt(span.textContent)+1; btn.style.color='#f43f5e'; }
+function addPost() {
+  const input = document.getElementById('communityPostInput');
+  const text = input.value.trim(); if (!text) return;
+  const li = document.createElement('li'); li.className = 'post-item';
+  const c = ['linear-gradient(135deg,#667eea,#764ba2)','linear-gradient(135deg,#10b981,#059669)','linear-gradient(135deg,#f59e0b,#d97706)'][Math.floor(Math.random()*3)];
+  li.innerHTML = `<div class="post-header"><div class="post-avatar" style="background:${c}">Y</div><div class="post-meta"><h4>You (Anonymous)</h4><p>Just now</p></div></div><div class="post-text">${text}</div><div class="post-actions"><button class="post-act-btn" onclick="likePost(this)">❤️ <span>0</span></button><button class="post-act-btn">💬 Reply</button></div>`;
+  document.getElementById('postList').prepend(li); input.value = '';
+}
+
+// ── CRISIS ────────────────────────────────────────────────────────────────────
+function callNumber(num) { if(confirm(`Call ${num} now?`)) window.location.href=`tel:${num}`; }
+function triggerSOS() { alert('🆘 EMERGENCY SOS\n\niCall India: 9152987821\nVandrevala: 1860-2662-345\n\nYou matter. Help is coming. 💜'); window.location.href='tel:9152987821'; }
+
+// ── CHATBOT ───────────────────────────────────────────────────────────────────
+const chatWindow   = document.getElementById('chatWindow');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput    = document.getElementById('chatInput');
+const chatToggle   = document.getElementById('chatToggle');
+const chatClose    = document.getElementById('chatClose');
+let chatIsOpen = false, hasGreeted = false;
+
+function openChatWindow() {
+  chatIsOpen = true;
+  chatWindow.classList.add('open');
+  chatToggle.innerHTML = '<span style="font-size:1.4rem">✕</span>';
+  const b = document.getElementById('chatBadge'); if(b) b.style.display='none';
+  if (!hasGreeted) {
+    hasGreeted = true;
+    const name = currentUser ? currentUser.name.split(' ')[0] : (curLang==='hi'?'दोस्त':'friend');
+    addBotMsg(T[chatLang].greeting(name));
+    setTimeout(updateQuickReplies, 800);
+  }
+  setTimeout(() => chatMessages.scrollTop = chatMessages.scrollHeight, 100);
+}
+
+function closeChatWindow() {
+  chatIsOpen = false;
+  chatWindow.classList.remove('open');
+  chatToggle.innerHTML = '🧠<div id="chatBadge" style="display:none;position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:#f43f5e;border-radius:50%;border:2px solid white;"></div>';
+}
+
+chatToggle.addEventListener('click', () => { chatIsOpen ? closeChatWindow() : openChatWindow(); });
+chatClose.addEventListener('click', closeChatWindow);
+
+function addBotMsg(text) {
+  const div = document.createElement('div'); div.className = 'msg bot';
+  const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  div.innerHTML = text.replace(/\n/g,'<br>') + `<span class="msg-time">${time}</span>`;
+  chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function addUserMsg(text) {
+  const div = document.createElement('div'); div.className = 'msg user';
+  const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  div.innerHTML = text + `<span class="msg-time">${time}</span>`;
+  chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight;
+  const qr = document.getElementById('quickReplies'); if(qr) qr.innerHTML = '';
+}
+function showTyping() {
+  const div = document.createElement('div'); div.className='msg bot typing'; div.id='typingIndicator';
+  div.innerHTML='<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+  chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function hideTyping() { const t=document.getElementById('typingIndicator'); if(t) t.remove(); }
+
+async function sendMessage() {
+  const msg = chatInput.value.trim(); if (!msg) return;
+  chatInput.value = ''; chatInput.style.height = 'auto';
+  addUserMsg(msg); showTyping();
+  try {
+    const res = await fetch(`${API_BASE}/chatbot`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ message: msg, sessionId: chatSessionId, context: 'general', lang: chatLang })
+    });
+    const data = await res.json(); hideTyping();
+    if (data.reply) {
+      if (data.sessionId && !chatSessionId) { chatSessionId = data.sessionId; localStorage.setItem('manovritam_session', chatSessionId); }
+      addBotMsg(data.reply);
+    } else {
+      addBotMsg(data.error || (chatLang==='hi' ? 'थोड़ी देर में दोबारा कोशिश करें 💜' : 'Please try again in a moment 💜'));
+    }
+  } catch (err) {
+    hideTyping(); addBotMsg(T[chatLang].serverDown);
+  }
+}
+
+function sendQuick(text) { chatInput.value = text; sendMessage(); }
+
+document.getElementById('chatSend').addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', (e) => { if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendMessage(); } });
+chatInput.addEventListener('input', () => { chatInput.style.height='auto'; chatInput.style.height=Math.min(chatInput.scrollHeight,90)+'px'; });
+
+setTimeout(() => { const b=document.getElementById('chatBadge'); if(b&&!chatIsOpen) b.style.display='block'; }, 3000);
+
+// ── SCROLL ANIMATIONS ─────────────────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', (e) => {
+    e.preventDefault();
+    const target = document.querySelector(anchor.getAttribute('href'));
+    if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+if (currentUser) setLoggedIn(currentUser);
+setLang(curLang);
+updateQuickReplies();
+</script>
+</body>
+</html>
