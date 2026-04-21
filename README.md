@@ -1,12 +1,10 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=🧠%20Manovriti%20AI&fontSize=60&fontColor=fff&animation=twinkling&fontAlignY=35&desc=Mental%20Health%20%26%20Wellness%20Platform&descAlignY=55&descSize=20" width="100%"/>
+# 🧠 Manovriti AI v2
 
-<br/>
+### *Mental Health & Wellness Platform*
 
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=22&pause=1000&color=A78BFA&center=true&vCenter=true&multiline=true&repeat=true&width=600&height=80&lines=AI-Powered+Mental+Health+Support+%F0%9F%A7%A0;Hindi+%2B+English+Bilingual+Platform+%F0%9F%8C%8F;Your+Wellness+Companion%2C+Always+%F0%9F%92%9C" alt="Typing SVG" />
-</p>
+> 🤖 AI-Powered Mental Health Support &nbsp;|&nbsp; 🌐 Hindi + English &nbsp;|&nbsp; 💜 Your Wellness Companion
 
 <br/>
 
@@ -259,9 +257,7 @@ This project is licensed under the **MIT License**.
 
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=120&section=footer&animation=twinkling" width="100%"/>
-
-<br/>
+---
 
 **Made with 💜 by [Ansh Mittal](https://github.com/anshmittal2004)**
 
