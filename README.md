@@ -65,18 +65,33 @@
 
 <br/><br/>
 
-### 📊 Dashboard & Mood Tracker
-<img src="screenshots/dashboard.png" width="48%"/> &nbsp; <img src="screenshots/mood.png" width="48%"/>
+### 📊 Dashboard
+<img src="screenshots/dashboard.png" width="80%"/>
 
 <br/><br/>
 
-### 💬 AI Chat & Community
-<img src="screenshots/chat.png" width="48%"/> &nbsp; <img src="screenshots/community.png" width="48%"/>
+### 😊 Mood Tracker
+<img src="screenshots/mood.png" width="80%"/>
 
 <br/><br/>
 
-### 📓 Journal & Crisis Support
-<img src="screenshots/journal.png" width="48%"/> &nbsp; <img src="screenshots/crisis.png" width="48%"/>
+### 💬 AI Chat
+<img src="screenshots/chat.png" width="80%"/>
+
+<br/><br/>
+
+### 👥 Community
+<img src="screenshots/community.png" width="80%"/>
+
+<br/><br/>
+
+### 📓 Journal
+<img src="screenshots/journal.png" width="80%"/>
+
+<br/><br/>
+
+### 🆘 Crisis Support
+<img src="screenshots/crisis.png" width="80%"/>
 
 <br/><br/>
 
