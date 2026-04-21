@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🧠 Manovritam-AI
+# 🧠 Manovriti AI
 ### *Mental Health & Wellness Platform*
 
 <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=18&pause=1200&color=A78BFA&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=40&lines=AI-Powered+Mental+Health+Support+%F0%9F%A7%A0;Hindi+%2B+English+Bilingual+Platform+%F0%9F%8C%90;Your+Wellness+Companion%2C+Always+%F0%9F%92%9C;Built+with+Node.js+%2B+Gemini+AI+%E2%9A%A1" alt="Typing SVG" />
@@ -9,8 +9,8 @@
 
 <img src="https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
-<img src="https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
-<img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Groq-Llama_3-orange?style=for-the-badge&logo=meta&logoColor=white"/>
+<img src="https://img.shields.io/badge/Status-Live-brightgreen?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
 
 <br/><br/>
@@ -19,17 +19,23 @@
 <img src="https://img.shields.io/badge/Language-Hindi%20%2B%20English-orange?style=for-the-badge"/>
 <img src="https://img.shields.io/badge/4th%20Year-Major%20Project-9b59b6?style=for-the-badge"/>
 
+<br/><br/>
+
+### 🌐 [Live Demo → manovritam-ai.onrender.com](https://manovritam-ai.onrender.com)
+
+<img src="https://img.shields.io/badge/🚀%20Deployed%20on-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white"/>
+
 </div>
 
 ---
 
 <div align="center">
 
-## 💜 About Manovritam-AI
+## 💜 About Manovriti AI
 
 </div>
 
-> **Manovritam-AI** ek full-featured **Mental Health & Wellness Platform** hai jo **Google Gemini AI** se powered hai. Empathy aur intelligence ke saath design kiya gaya — ye platform emotional support, mood tracking, guided meditation, aur mental wellness sab kuch deta hai — **Hindi & English** dono mein.
+> **Manovriti AI** ek full-featured **Mental Health & Wellness Platform** hai jo **Google Gemini AI** se powered hai. Empathy aur intelligence ke saath design kiya gaya — ye platform emotional support, mood tracking, guided meditation, aur mental wellness sab kuch deta hai — **Hindi & English** dono mein.
 
 ---
 
@@ -87,7 +93,7 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║              🧠 Manovritam-AI — FEATURE MAP                   ║
+║              🧠 MANOVRITI AI — FEATURE MAP                   ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  🤖 AI Chatbot (EN+Hindi)    →  All Pages                    ║
 ║  📊 Mood Tracker + Insights  →  mood-tracker.html            ║
@@ -145,7 +151,7 @@ node server.js
 Open **http://localhost:5000** — you'll see:
 
 ```
-🧠 Manovritam-AI v2 → http://localhost:5000
+🧠 Manovriti AI v2 → http://localhost:5000
 🔑 Gemini Key:   ✅ Set
 🔑 Google OAuth: ✅ Set
 ```
