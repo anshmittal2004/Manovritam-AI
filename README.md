@@ -1,26 +1,23 @@
 <div align="center">
 
-# 🧠 Manovriti AI v2
-
+# 🧠 Manovriti AI
 ### *Mental Health & Wellness Platform*
 
-> 🤖 AI-Powered Mental Health Support &nbsp;|&nbsp; 🌐 Hindi + English &nbsp;|&nbsp; 💜 Your Wellness Companion
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=18&pause=1200&color=A78BFA&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=40&lines=AI-Powered+Mental+Health+Support+%F0%9F%A7%A0;Hindi+%2B+English+Bilingual+Platform+%F0%9F%8C%90;Your+Wellness+Companion%2C+Always+%F0%9F%92%9C;Built+with+Node.js+%2B+Gemini+AI+%E2%9A%A1" alt="Typing SVG" />
 
 <br/>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge&logo=git&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Google-Gemini_AI-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge"/>
-</p>
+<img src="https://img.shields.io/badge/Version-2.0-blueviolet?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Node.js-Express-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/>
+<img src="https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
+<img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge"/>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Made%20with-%E2%9D%A4%EF%B8%8F%20for%20Mental%20Health-ff69b4?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/Language-Hindi%20%2B%20English-orange?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/4th%20Year-Major%20Project-9b59b6?style=for-the-badge"/>
-</p>
+<br/><br/>
+
+<img src="https://img.shields.io/badge/Made%20with-%F0%9F%92%9C%20for%20Mental%20Health-ff69b4?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Language-Hindi%20%2B%20English-orange?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/4th%20Year-Major%20Project-9b59b6?style=for-the-badge"/>
 
 </div>
 
@@ -32,9 +29,7 @@
 
 </div>
 
-> **Manovriti AI** is a full-featured **Mental Health & Wellness Platform** powered by **Google Gemini AI**. Designed with empathy and intelligence, it provides users with an AI companion for emotional support, mood tracking, guided meditation, and mental wellness — all in **Hindi & English**.
-
-<br/>
+> **Manovriti AI** ek full-featured **Mental Health & Wellness Platform** hai jo **Google Gemini AI** se powered hai. Empathy aur intelligence ke saath design kiya gaya — ye platform emotional support, mood tracking, guided meditation, aur mental wellness sab kuch deta hai — **Hindi & English** dono mein.
 
 ---
 
@@ -60,39 +55,27 @@
 <div align="center">
 
 ### 🏠 Home Page
-<img src="screenshots/home.png" width="80%" style="border-radius: 12px; box-shadow: 0 8px 32px rgba(167,139,250,0.3)"/>
+<img src="screenshots/home.png" width="80%"/>
 
 <br/><br/>
 
 ### 📊 Dashboard & Mood Tracker
-<p>
-  <img src="screenshots/dashboard.png" width="48%" style="border-radius: 12px"/>
-  &nbsp;
-  <img src="screenshots/mood.png" width="48%" style="border-radius: 12px"/>
-</p>
+<img src="screenshots/dashboard.png" width="48%"/> &nbsp; <img src="screenshots/mood.png" width="48%"/>
 
-<br/>
+<br/><br/>
 
 ### 💬 AI Chat & Community
-<p>
-  <img src="screenshots/chat.png" width="48%" style="border-radius: 12px"/>
-  &nbsp;
-  <img src="screenshots/community.png" width="48%" style="border-radius: 12px"/>
-</p>
+<img src="screenshots/chat.png" width="48%"/> &nbsp; <img src="screenshots/community.png" width="48%"/>
 
-<br/>
+<br/><br/>
 
 ### 📓 Journal & Crisis Support
-<p>
-  <img src="screenshots/journal.png" width="48%" style="border-radius: 12px"/>
-  &nbsp;
-  <img src="screenshots/crisis.png" width="48%" style="border-radius: 12px"/>
-</p>
+<img src="screenshots/journal.png" width="48%"/> &nbsp; <img src="screenshots/crisis.png" width="48%"/>
 
-<br/>
+<br/><br/>
 
 ### 💊 Medication Manager
-<img src="screenshots/medication.png" width="80%" style="border-radius: 12px"/>
+<img src="screenshots/medication.png" width="80%"/>
 
 </div>
 
@@ -121,45 +104,28 @@
 
 ---
 
-## ⚡ Quick Setup (5 Steps)
+## ⚡ Quick Setup (4 Steps)
 
 ### Step 1 — 🔑 Get Gemini API Key (FREE)
 
-```bash
+```
 1. Go to → https://aistudio.google.com/app/apikey
 2. Sign in with Google
 3. Click "Create API Key" → Copy it ✅
 ```
 
-### Step 2 — 🔐 Get Google OAuth Client ID
-
-```bash
-1. Go to → https://console.cloud.google.com
-2. Create a project (or select existing)
-3. APIs & Services → Credentials
-4. "+ CREATE CREDENTIALS" → OAuth 2.0 Client ID
-5. Application type: Web application
-6. Authorized JavaScript origins: http://localhost:5000
-7. Click Create → Copy the Client ID ✅
-```
-
-> 💡 **Google Sign-In is OPTIONAL** — Email signup works without it!
-
-### Step 3 — 📦 Install Dependencies
+### Step 2 — 📦 Install Dependencies
 
 ```bash
 cd backend
 npm install
 ```
 
-### Step 4 — ⚙️ Create .env File
+### Step 3 — ⚙️ Create .env File
 
 ```bash
 # Windows:
 copy .env.example .env
-
-# Mac/Linux:
-cp .env.example .env
 ```
 
 Open `.env` and fill in:
@@ -170,7 +136,7 @@ GOOGLE_CLIENT_ID=123456789-xxxxx.apps.googleusercontent.com
 PORT=5000
 ```
 
-### Step 5 — 🚀 Start Server
+### Step 4 — 🚀 Start Server
 
 ```bash
 node server.js
@@ -190,26 +156,15 @@ Open **http://localhost:5000** — you'll see:
 
 <div align="center">
 
-<p>
-  <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Google%20OAuth-EA4335?style=for-the-badge&logo=google&logoColor=white"/>
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
-</p>
+<img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white"/>
+<img src="https://img.shields.io/badge/Google%20Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white"/>
+<img src="https://img.shields.io/badge/Google%20OAuth-EA4335?style=for-the-badge&logo=google&logoColor=white"/>
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>
+<img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black"/>
 
 </div>
-
----
-
-## 🔑 Google Sign-In Notes
-
-- ✅ Works only when `GOOGLE_CLIENT_ID` is set in `.env`
-- ✅ The server exposes the client ID to the frontend automatically
-- ✅ Without it, email signup/login still works perfectly
-- ⚠️ Users who sign up with Google **cannot** login with email (and vice versa)
 
 ---
 
@@ -219,12 +174,12 @@ Open **http://localhost:5000** — you'll see:
 Manovritam-AI/
 │
 ├── 📁 backend/
-│   ├── server.js          # Main entry point
-│   ├── .env.example       # Environment variables template
+│   ├── server.js          ← Main entry point
+│   ├── .env.example       ← Environment template
 │   ├── package.json
 │   └── ...
 │
-├── 📁 screenshots/        # App screenshots
+├── 📁 screenshots/
 │   ├── home.png
 │   ├── dashboard.png
 │   ├── chat.png
@@ -239,11 +194,20 @@ Manovritam-AI/
 
 ---
 
+## 🔑 Google Sign-In Notes
+
+- ✅ Works only when `GOOGLE_CLIENT_ID` is set in `.env`
+- ✅ Server exposes the client ID to frontend automatically
+- ✅ Without it, email signup/login still works perfectly
+- ⚠️ Google signup users **cannot** login with email (and vice versa)
+
+---
+
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
+Contributions are welcome!
 
-- 🐛 Report bugs
+- 🐛 Report bugs via Issues
 - 💡 Suggest features
 - 🔧 Submit pull requests
 
@@ -251,13 +215,11 @@ Contributions are welcome! Feel free to:
 
 ## 📄 License
 
-This project is licensed under the **MIT License**.
+Licensed under the **MIT License** — free to use, modify, and distribute.
 
 ---
 
 <div align="center">
-
----
 
 **Made with 💜 by [Ansh Mittal](https://github.com/anshmittal2004)**
 
@@ -269,6 +231,6 @@ This project is licensed under the **MIT License**.
 
 <br/>
 
-![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=anshmittal2004.Manovritam-AI)
+![Visitor Count](https://visitor-badge.laobi.icu/badge?page_id=anshmittal2004.Manovritam-AI&color=blueviolet)
 
 </div>
