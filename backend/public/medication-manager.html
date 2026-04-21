@@ -176,7 +176,7 @@ header p{color:#666}
 </div>
 
 <script>
-const API = 'http://localhost:5000/api';
+const API = 'https://manovritam-ai.onrender.com/api';
 let sid = localStorage.getItem('manovriti_session') || null;
 let meds = JSON.parse(localStorage.getItem('manovriti_meds') || '[]');
 const takenToday = new Set(JSON.parse(localStorage.getItem('manovriti_taken_' + new Date().toDateString()) || '[]'));
