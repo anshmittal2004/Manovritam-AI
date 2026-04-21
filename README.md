@@ -3,7 +3,7 @@
 # 🧠 Manovritam-AI
 ### *Mental Health & Wellness Platform*
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=18&pause=1200&color=A78BFA&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=40&lines=AI-Powered+Mental+Health+Support+%F0%9F%A7%A0;Hindi+%2B+English+Bilingual+Platform+%F0%9F%8C%90;Your+Wellness+Companion%2C+Always+%F0%9F%92%9C;Built+with+Node.js+%2B+Gemini+AI+%E2%9A%A1" alt="Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=18&pause=1200&color=A78BFA&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=40&lines=AI-Powered+Mental+Health+Support+%F0%9F%A7%A0;Hindi+%2B+English+Bilingual+Platform+%F0%9F%8C%90;Your+Wellness+Companion%2C+Always+%F0%9F%92%9C;Built+with+Node.js" alt="Typing SVG" />
 
 <br/>
 
